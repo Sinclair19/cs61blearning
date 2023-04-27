@@ -1,5 +1,5 @@
 # 1 Introduction to Java
-## 1 Essentials
+## 1.1 Essentials
 Java is an object oriented language with strict requirements  
 1. All code in Java must be part of a class
 2. We delimit hte beginning and end of segments of code with { }
@@ -20,3 +20,43 @@ A sequence of two programs to run a Java program
 - `java` to run it
 
 Static Typing  
+
+## 1.2 Objects
+
+Defining and Instantiating Classes
+- Every method is asociated with some class
+- To run a class, we must define a main method
+  - Not all calsses have a main method
+
+Arrays of Objects  
+To create an array of objects  
+- First use the new keyword to careate the array
+- Then use new again for each object that you want to put in the array
+
+Static Non-static  
+key differences between static and non-static methods  
+- Static methods are invoked using the class name
+- Instance methods are invoked using an instance name
+- Static methods can't acess instance variables
+
+A class may have a mix of static and non-static memebers  
+- A variable or method defined in a class is also called a member of that calss
+- Static members are accessed using class name
+- Non-static members are accessed using class name
+- Static methods must access instance variables via a specific instance
+
+`public static void main(String[] args)`
+- public: So far, all of our methods start with this keyword
+- static: It is a static method, not associated with any particular instance
+- void: It has no return type
+- main: This is the name of the method
+- String[] args: This is a parameter that is passed to the main method
+
+Command Line Arguments  
+```java
+public class ArgsDemo {
+    public static void main(String[] args) {
+        System.out.println(args[0]);
+    }
+}
+```
