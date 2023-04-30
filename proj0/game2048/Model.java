@@ -106,6 +106,44 @@ public class Model extends Observable {
      *    value, then the leading two tiles in the direction of motion merge,
      *    and the trailing tile does not.
      * */
+    public boolean move_and_score(int dcol, int drow, Tile t) {
+        int value = t.value();
+        boolean flag = board.move(dcol, drow, t);
+        if (flag) {
+            score += 2 * value;
+            return flag;
+        }
+        return flag;
+    }
+
+    public boolean move_without_merge(int col) {
+        boolean changed = false;
+        for (int row = board.size() - 2; row >= 0; row -= 1) {
+            // board.size() - 2, start form the second row in order to prevent out of index
+            if (board.tile(col, row) != null && board.tile(col, row + 1) == null) {
+                Tile t = board.tile(col, row);
+                move_and_score(col, row + 1, t);
+                changed = true;
+            }
+        }
+        return changed;
+    }
+    public boolean move_and_merge(int col) {
+        boolean changed = false;
+        for (int row = board.size() - 2; row >= 0; row -= 1) {
+            if (board.tile(col, row) != null && board.tile(col, row + 1) != null) {
+                if (board.tile(col, row).value() == board.tile(col, row + 1).value()) {
+                    Tile t = board.tile(col, row);
+                    boolean flag = move_and_score(col, row + 1, t);
+                    if (flag) {
+                        row -= 1;
+                    }
+                    changed = true;
+                }
+            }
+        }
+        return changed;
+    }
     public boolean tilt(Side side) {
         boolean changed;
         changed = false;
@@ -114,74 +152,23 @@ public class Model extends Observable {
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
         board.startViewingFrom(side);
+
         for (int i = 0; i < board.size(); i += 1) { // i equal col
-            boolean flag = false;
-            for (int j = board.size() - 1 - 1; j >= 0; j -= 1) { // j equal
-                int col = i + 0;
-                int row = j + 1;
-                /**if (col < 0 || col > board.size() - 1) {
-                    col = i;
-                }
-                if (row < 0 || row > board.size() - 1) {
-                    row = j;
-                }*/
-                while (board.tile(col, row) == null && board.tile(i, j) != null) {
-                    int value = board.tile(i,j).value();
-                    flag = board.move(col, row, board.tile(i,j));
-                    /**if (flag) {
-                        score += 2 * value;
-                        break;
-                    }
-                    if (row + 1 < board.size()) {
-                        i = i;
-                        j = row + 1;
-                    }*/
+            for (int t = 0; t < 3; t += 1) { // run 3 times because there will at most 3 times move
+                if (move_without_merge(i)) {
                     changed = true;
                 }
-                /**if (board.tile(i, j) != null && board.tile(col, row) != null) {
-                    if (board.tile(i, j).value() == board.tile(col, row).value()) {
-                        int value = board.tile(i,j).value();
-                        flag = board.move(i, j, board.tile(col, row));
-                        if (flag) {
-                            score += 2 * value;
-                            break;
-                        }
-                        changed = true;
-                    }
-                }*/
             }
-        }
-        for (int i = 0; i < board.size(); i += 1) { // i equal col
-            boolean flag = false;
-            for (int j = board.size() - 1 - 1; j >= 0; j -= 1) { // j equal
-                int col = i + 0;
-                int row = j + 1;
-                if (col < 0 || col > board.size() - 1) {
-                 col = i;
-                 }
-                 if (row < 0 || row > board.size() - 1) {
-                 row = j;
-                 }
-                if (board.tile(i, j) != null && board.tile(col, row) != null) {
-                    if (board.tile(i, j).value() == board.tile(col, row).value()) {
-                        int value = board.tile(i,j).value();
-                        flag = board.move(col, row, board.tile(i, j));
-                        if (flag) {
-                            score += 2 * value;
-                        }
-                        changed = true;
-                    }
-                }
-                if (board.tile(col, row) == null && board.tile(i, j) != null) {
-                    int value = board.tile(i,j).value();
-                    flag = board.move(col, row, board.tile(i,j));
-                    if (flag) {
-                        score += 2 * value;
-                    }
+            if (move_and_merge(i)) {
+                changed = true;
+            }
+            for (int t = 0; t < 3; t += 1) {
+                if (move_without_merge(i)) {
                     changed = true;
                 }
             }
         }
+
         board.startViewingFrom(Side.NORTH);
         checkGameOver();
         if (changed) {
