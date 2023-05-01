@@ -111,7 +111,6 @@ public class Model extends Observable {
         boolean flag = board.move(dcol, drow, t);
         if (flag) {
             score += 2 * value;
-            return flag;
         }
         return flag;
     }
@@ -151,15 +150,15 @@ public class Model extends Observable {
         // TODO: Modify this.board (and perhaps this.score) to account
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
-        board.startViewingFrom(side);
+        board.setViewingPerspective(side);
 
         for (int i = 0; i < board.size(); i += 1) { // i equal col
             for (int t = 0; t < 3; t += 1) { // run 3 times because there will at most 3 times move
-                if (move_without_merge(i)) {
+                if (move_without_merge(i)){
                     changed = true;
                 }
             }
-            if (move_and_merge(i)) {
+            if (move_and_merge(i)){
                 changed = true;
             }
             for (int t = 0; t < 3; t += 1) {
@@ -169,7 +168,7 @@ public class Model extends Observable {
             }
         }
 
-        board.startViewingFrom(Side.NORTH);
+        board.setViewingPerspective(Side.NORTH);
         checkGameOver();
         if (changed) {
             setChanged();
@@ -255,11 +254,12 @@ public class Model extends Observable {
 
     public static boolean atLeastOneMoveExists(Board b) {
         // TODO: Fill in this function.
+        if (emptySpaceExists(b)) {
+            return true;
+        }
         for (int i = 0; i < b.size(); i += 1) {
             for (int j = 0; j < b.size(); j += 1) {
-                if (b.tile(i,j) == null) {
-                    return true;
-                } else if (check_tile_around(b, i, j)) {
+                if (check_tile_around(b, i, j)) {
                     return true;
                 }
             }
