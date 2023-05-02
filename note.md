@@ -60,3 +60,30 @@ public class ArgsDemo {
     }
 }
 ```
+
+# 3 Testing and Selection Sort
+
+## 3.1 A New Way
+### Ad Hoc Testing
+hoc testing
+`java.util.Arrays.equals` for `==` in array
+### JUnit Testing
+junit assert  
+```java
+org.junit.Assert.assertArrayEquals(expected, input);
+```
+
+### Selection Sort
+
+### Better JUnit
+- Precede each method with `@org.junit.Test` (`Test` after `import org.junit.Test;`).
+- Change each test method to be non-static.
+- Remove our main method from the TestSort class.
+
+### Testing Philosophy
+Test-Driven Development (TDD)  
+1. Identify a new feature.
+2. Write a unit test for that feature.
+3. Run the test. It should fail.
+4. Write code that passes the test. Yay!
+5. Optional: refactor code to make it faster, cleaner, etc. Except now we have a reference to tests that should pass.
