@@ -87,3 +87,52 @@ Test-Driven Development (TDD)
 3. Run the test. It should fail.
 4. Write code that passes the test. Yay!
 5. Optional: refactor code to make it faster, cleaner, etc. Except now we have a reference to tests that should pass.
+
+
+# 2 Lists
+
+## 2.1 Mystery of the Walrus
+- primitive types in Java  
+  - byte, short, int, long, float, double, boolean, char  
+- reference type  
+  - Everything else, including arrays  
+
+### Reference Types
+
+#### Object Instantiation
+When we instantiate an Object using new (e.g. Dog, Walrus, Planet)  
+Java first allocates a box for each instance variable of the class, and fills them with a default value.  
+The constructor then usually (but not always) fills every box with some other value.
+
+#### Reference Variable Declaration
+When we declare a variable of any reference type (Walrus, Dog, Planet, array, etc.),  
+Java allocates a box of 64 bits, no matter what type of object.
+
+**This 64 bits of memory is the address of the object**
+
+#### Box and Pointer Notation
+- If an address is all zeros, we will represent it with null.
+- A non-zero address will be represented by an arrow pointing at an object instantiation.
+
+#### Parameter Passing
+When you pass parameters to a function, you are also simply copying the bits.  
+In other words, the GRoE also applies to parameter passing.  
+Copying the bits is usually called "pass by value".  
+**In Java, we always pass by value.**
+
+#### Instantiation of Arrays
+Objects can be lost if you lose the bits corresponding to the address  
+
+#### IntLists
+- link list
+```java
+public class IntList {
+    public int first;
+    public IntList rest;        
+
+    public IntList(int f, IntList r) {
+        first = f;
+        rest = r;
+    }
+}
+```
