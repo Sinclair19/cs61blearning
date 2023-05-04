@@ -136,3 +136,58 @@ public class IntList {
     }
 }
 ```
+
+## 2.2 The SLList
+naked recursive data structure  
+
+### Public and Private
+**When you create a `public` member (i.e. method or variable), be careful, because you're effectively committing to supporting that member's behavior exactly as it is now, forever.**
+
+### Nested Classes
+Java provides us with the ability to embed a class declaration inside of another  
+If the nested class has no need to use any of the instance methods or variables of outer class, you may declare the nested class `static`  
+
+### hepler method (**overloaded**)
+create a private helper method that interacts with the underlying naked recursive data structure.  
+
+```java
+/** returns the size of the list starting at IntNode p */
+private static int size(IntNode p) {
+    if (p.next == null) {
+      return 1;
+    }
+    return 1 + size(p.next);
+}
+
+public int size() {
+    return size(first);
+}
+```
+
+We say that two methods with the same name but different signatures are overloaded  
+
+
+### Sentinel Nodes
+A cleaner, though less obvious solution, is to make it so that all SLLists are the "same", even if they are empty.  
+We can do this by creating a special node that is always there, which we will call a **sentinel node**.
+
+Introduce a new node before all nodes to avoid crash of addlast to empty node  
+
+```java
+public void addLast(int x) {
+    size += 1;
+    IntNode p = sentinel;
+    while (p.next != null) {
+        p = p.next;
+    }
+
+    p.next = new IntNode(x, null);
+}
+```
+
+### Invariants
+
+A SLList with a sentinel node has at least the following invariants:  
+- The sentinel reference always points to a sentinel node.
+- The front item (if it exists), is always at sentinel.next.item.
+- The size variable is always the total number of items that have been added.
