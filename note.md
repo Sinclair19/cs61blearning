@@ -191,3 +191,96 @@ A SLList with a sentinel node has at least the following invariants:
 - The sentinel reference always points to a sentinel node.
 - The front item (if it exists), is always at sentinel.next.item.
 - The size variable is always the total number of items that have been added.
+
+## 2.3 The DLList
+
+### Improvement #7: Looking Back
+add a previous pointer to each IntNode  
+```java
+public class IntNode {
+    public IntNode prev;
+    public int item;
+    public IntNode next;
+}
+```
+
+### Improvement #8: Sentinel Upgrade
+- add a second sentinel node to the back of the list
+- implement the list so that it is circular, with the front and back pointers sharing the same sentinel node.
+
+### Generic DLLists
+```java
+public class DLList<BleepBlorp> {
+    private IntNode sentinel;
+    private int size;
+
+    public class IntNode {
+        public IntNode prev;
+        public BleepBlorp item;
+        public IntNode next;
+        ...
+    }
+    ...
+}
+```
+```java
+DLList<String> d2 = new DLList<>("hello");
+d2.addLast("world");
+```
+
+- In the .jave file implementing your dasta structure, specify your "generic type" only once at the very top of the file
+- In .jave files that use your data structure, specify d3esired type onec:
+  - Write out desired type during declaration
+  - Use the empty diamond operator <> during instantiation
+- When declaring or instantiating your data structure, use the reference type
+  - int: Integer
+  - double: Double
+  - char: Character
+  - boolean: Boolean
+  - long: Long
+
+## 2.4 Arrays
+### Array Basics
+- `int x;` gives us a 32 bit memory box that stores ints.
+- `Walrus w1;` gives us a 64 bit memory box that stores Walrus references.
+- `Walrus w2 = new Walrus(30, 5.6);` gets us 3 total memory boxes. One 64 bit box that stores Walrus references, one 32 bit box that stores the int size of the Walrus, and a 64 bit box that stores the double tuskSize of the Walrus.
+
+Arrays consist of: 
+- A fixed integer length, N
+- A sequence of N memory boxes (N = length) where all boxes are of the same type, and are numbered 0 through N - 1.
+
+### Array Creation
+- `x = new int[3];`
+  - create an array of the specified length and fill in each memory box with a default value
+  - In this case, it will create an array of length 3, and fill each of the 3 boxes with the default int value 0
+- `y = new int[]{1, 2, 3, 4, 5};`
+  - creates an array with the exact size needed to accommodate the specified starting values
+  - In this case, it creates an array of length 5, with those five specific elements
+- `int[] z = {9, 10, 11, 12, 13};`
+  - has the same behavior as the second notation
+  - can only be used when combined with a variable declaration
+
+### Array Access and Modification
+
+Arraycopy  
+Two ways to copy arrays  
+- item by item using a loop
+- Using arraycopoy. Takes 5 parameters:
+  - Source array
+  - Start position in source
+  - Target array
+  - Start position in target
+  - Number to copy
+
+### 2D Arrays in Java
+`int[][] bamboozle = new int[4][]`
+This creates exactly four memory boxes, each of which can point to an array of integers (of unspecified length).  
+`matrix = new int[4][4]`
+create 16 memory boxs, and the sub array are set to default value of int array, which is 0  
+
+### Arrays vs. Classes
+The key differences between memory boxes in arrays and classes:  
+- Array boxes are numbered and accessed using [] notation, and class boxes are named and accessed using dot notation.
+- Array boxes must all be the same type. Class boxes can be different types.
+
+One particularly notable impact of these difference is that [] notation allows us to specify which index we'd like at **runtime**
