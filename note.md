@@ -284,3 +284,53 @@ The key differences between memory boxes in arrays and classes:
 - Array boxes must all be the same type. Class boxes can be different types.
 
 One particularly notable impact of these difference is that [] notation allows us to specify which index we'd like at **runtime**
+
+## 2.5 The AList
+
+### First Attempt: The Naive Array Based List
+- The position of the next item to be inserted (using addLast) is always size.
+- The number of items in the AList is always size.
+- The position of the last item in the list is always size - 1.
+
+### Naive Resizing Arrays
+```java
+int[] a = new int[size + 1];
+System.arraycopy(items, 0, a, 0, size);
+a[size] = 11;
+items = a;
+size = size + 1;
+```
+### Analyzing the Naive Resizing Array
+Creating all those memory boxes and recopying their contents takes time.  
+By contrast, the naive array list shows a parabola, indicating that each operation takes linear time, since the integral of a line is a parabola  
+N^2/N  
+
+### Geometric Resizing
+```java
+
+public void insertBack(int x) {
+    if (size == items.length) {
+           resize(size * RFACTOR);
+    }
+    items[size] = x;
+    size += 1;
+}
+```
+We instead resize by **multiplying** the number of boxes by RFACTOR
+
+### Memory Performance
+we can also downsize our array when it starts looking empty.  
+Specifically, we define a "usage ratio" R which is equal to the size of the list divided by the length of the items array.  
+For example, in the figure below, the usage ratio is 0.04.  
+
+In a typical implementation, we halve the size of the array when R falls to less than 0.25  
+
+### Generic ALists
+Java does not allow us to create an array of generic objects due to an obscure issue with the way generics are implemented
+
+- [ ] FALSE  
+  `Glorp[] items = new Glorp[8];`
+- [x] CORRECT  
+  `Glorp[] items = (Glorp []) new Object[8];`
+
+This will yield a compilation warning, but it's just something we'll have to live with
