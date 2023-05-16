@@ -6,7 +6,7 @@ import static org.junit.Assert.*;
 
 
 /** Performs some basic linked list tests. */
-public class ArrayDequeTest {
+public class ArrayDequecircleTest {
 
     @Test
     /** Adds a few things to the list, checking isEmpty() and size() are correct,
@@ -15,7 +15,7 @@ public class ArrayDequeTest {
      * && is the "and" operation. */
     public void addIsEmptySizeTest() {
 
-        ArrayDeque<String> lld1 = new ArrayDeque<String>();
+        ArrayDequecircle<String> lld1 = new ArrayDequecircle<String>();
 
 		assertTrue("A newly initialized LLDeque should be empty", lld1.isEmpty());
 		lld1.addFirst("front");
@@ -39,7 +39,7 @@ public class ArrayDequeTest {
     /** Adds an item, then removes an item, and ensures that dll is empty afterwards. */
     public void addRemoveTest() {
 
-        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
+        ArrayDequecircle<Integer> lld1 = new ArrayDequecircle<Integer>();
 		// should be empty
 		assertTrue("lld1 should be empty upon initialization", lld1.isEmpty());
 
@@ -56,7 +56,7 @@ public class ArrayDequeTest {
     /* Tests removing from an empty deque */
     public void removeEmptyTest() {
 
-        ArrayDeque<Integer> lld1 = new ArrayDeque<>();
+        ArrayDequecircle<Integer> lld1 = new ArrayDequecircle<>();
         lld1.addFirst(3);
 
         lld1.removeLast();
@@ -76,9 +76,9 @@ public class ArrayDequeTest {
     /* Check if you can create ArrayDeques with different parameterized types*/
     public void multipleParamTest() {
 
-        ArrayDeque<String>  lld1 = new ArrayDeque<String>();
-        ArrayDeque<Double>  lld2 = new ArrayDeque<Double>();
-        ArrayDeque<Boolean> lld3 = new ArrayDeque<Boolean>();
+        ArrayDequecircle<String>  lld1 = new ArrayDequecircle<String>();
+        ArrayDequecircle<Double>  lld2 = new ArrayDequecircle<Double>();
+        ArrayDequecircle<Boolean> lld3 = new ArrayDequecircle<Boolean>();
 
         lld1.addFirst("string");
         lld2.addFirst(3.14159);
@@ -90,10 +90,10 @@ public class ArrayDequeTest {
     }
 
     @Test
-    /* check if null is return when removing from an empty ArrayDeque. */
+    /* check if null is return when removing from an empty ArrayDequecircle. */
     public void emptyNullReturnTest() {
 
-        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
+        ArrayDequecircle<Integer> lld1 = new ArrayDequecircle<Integer>();
 
         boolean passed1 = false;
         boolean passed2 = false;
@@ -106,7 +106,7 @@ public class ArrayDequeTest {
     /* Add large number of elements to deque; check if order is correct. */
     public void bigLLDequeTest() {
 
-        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
+        ArrayDequecircle<Integer> lld1 = new ArrayDequecircle<Integer>();
         for (int i = 0; i < 100000; i++) {
             lld1.addLast(i);
         }
@@ -123,7 +123,7 @@ public class ArrayDequeTest {
 
     @Test
     public void getTest() {
-        ArrayDeque<Integer> lld1 = new ArrayDeque<>();
+        ArrayDequecircle<Integer> lld1 = new ArrayDequecircle<>();
         lld1.addFirst(1);
         lld1.addFirst(2);
         lld1.addFirst(3);
@@ -135,7 +135,7 @@ public class ArrayDequeTest {
 
     @Test
     public void addFirstTest() {
-        ArrayDeque<Integer> lld1 = new ArrayDeque<>();
+        ArrayDequecircle<Integer> lld1 = new ArrayDequecircle<>();
         lld1.addFirst(4);
         lld1.addFirst(3);
         lld1.addFirst(2);
@@ -148,7 +148,7 @@ public class ArrayDequeTest {
 
     @Test
     public void addLastTest() {
-        ArrayDeque<Integer> lld1 = new ArrayDeque<>();
+        ArrayDequecircle<Integer> lld1 = new ArrayDequecircle<>();
         lld1.addLast(1);
         lld1.addLast(2);
         lld1.addLast(3);
@@ -161,7 +161,8 @@ public class ArrayDequeTest {
 
     @Test
     public void removeTest() {
-        ArrayDeque<Integer> lld1 = new ArrayDeque<>();
+        ArrayDequecircle<Integer> lld1 = new ArrayDequecircle<>();
+        //lld1.addFirst(5);
         lld1.addLast(1);
         lld1.addLast(2);
         lld1.addLast(3);

@@ -41,6 +41,7 @@ public class ArrayDeque<T> {
         }
     }
 
+    /**
     private void resizer(int capacity, int position) {
         // overload with position argument
         T[] temp = (T[]) new Object[items.length + 1]; // to allow at least one position to be empty
@@ -51,6 +52,8 @@ public class ArrayDeque<T> {
         System.arraycopy(items, position, temp, position + 1, size - position);
         items = temp;
     }
+     */
+
     public void addFirst(T item) {
         if (start == 0) {
             resizel((int) ((size + 1) * 1.2));
@@ -68,11 +71,6 @@ public class ArrayDeque<T> {
         size += 1;
     }
 
-    private void decreasesize() {
-        if ((double) size / items.length < 0.25) {
-            resizer((int) (items.length * 0.25));
-        }
-    }
     public T removeFirst() {
         if (size == 0) {
             return null;
@@ -106,10 +104,10 @@ public class ArrayDeque<T> {
         return items[start + index];
     }
 
-    public T getFirst() {
+    private T getFirst() {
         return items[start];
     }
-    public T getLast() {
+    private T getLast() {
         return items[start + size - 1];
     }
 
