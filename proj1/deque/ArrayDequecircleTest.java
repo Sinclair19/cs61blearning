@@ -1,5 +1,6 @@
 package deque;
 
+import edu.princeton.cs.algs4.StdRandom;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -189,5 +190,40 @@ public class ArrayDequecircleTest {
         assertEquals((int) lld1.removeLast() , 2);
         assertEquals((int) lld1.removeLast() , 1);
 
+    }
+
+    @Test
+    public void randomizedTest() {
+        ArrayDeque<Integer> L = new ArrayDeque<>();
+        ArrayDequecircle<Integer> B = new ArrayDequecircle<>();
+
+        int N = 5000;
+        for (int i = 0; i < N; i += 1) {
+            int operationNumber = StdRandom.uniform(0, 4);
+            if (operationNumber == 0) {
+                // addLast
+                int randVal = StdRandom.uniform(0, 100);
+                L.addLast(randVal);
+                B.addLast(randVal);
+                //System.out.println("addLast(" + randVal + ")");
+            } else if (operationNumber == 1) {
+                // size
+                int Lsize = L.size();
+                int Bsize = B.size();
+                assertEquals(Lsize, Bsize);
+                //System.out.println("size: " + size);
+            } else if (operationNumber == 2) {
+                if (L.size() > 0 && B.size() > 0) {
+                    int num = StdRandom.uniform(0, L.size());
+                    int Llast = L.get(num);
+                    int Blast = B.get(num);
+                    assertEquals(Llast, Blast);
+                    //System.out.println("removelast(" + last + ")");
+                }
+            }else if (operationNumber == 3) {
+                if (L.size() > 0 && B.size() > 0) {
+                    assertEquals(L.removeLast(), B.removeLast());}
+            }
+        }
     }
 }
