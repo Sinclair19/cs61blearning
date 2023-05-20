@@ -364,3 +364,92 @@ When Java runs a method that is overriden, it searches for the appropriate metho
   - EX) Lists should print themselves exactly this way: by getting each element in order and then printing them.
 
 When you are creating these hierarchies, remember that the relationship between a subclass and a superclass should be an **"is-a"** relationship  
+
+## 4.2 Extends, Casting, Higher Order Functions
+
+### Extends
+inheritance allows subclasses to reuse code from an already defined class  
+`public class RotatingSLList<Item> extends SLList<Item>`
+
+By using the extends keyword, subclasses inherit all members of the parent class. "Members" includes:  
+- All instance and static variables
+- All methods
+- All nested classes
+
+Note that constructors are not inherited, and private members cannot be directly accessed by subclasses.  
+
+### Super
+`super.methodname` allows you to use method inherited from superclass
+`super()` allows you to use the superclass default constructor
+
+- Constructors Are Not Inherited
+While constructors are not inherited, Java requires that all constructors must start with a call to one of its superclass's constructors.  
+
+### The Object Class
+Every class in Java is a descendant of the Object class, or extends the Object class  
+Even classes that do not have an explicit extends in their class still implicitly extend the Object class  
+
+### Encapsulation
+Encapsulation is one of the fundamental principles of object oriented programming, and is one of the approaches that we take as programmers to resist our biggest enemy: complexity  
+Managing complexity is one of the major challenges we must face when writing large programs.
+
+**Inheritance May Breaks Encapsulation**
+
+### Type Checking and Casting
+In general, the compiler only allows method calls and assignments based on compile-time types.  
+
+### Expressions
+expressions using the new keyword also have compile-time types  
+The compiler check if the compile-time type of the right-hand side of the expression matchs the left-hand side  
+
+### Casting
+`(Item)`
+Java has a special syntax where you can tell the compiler that a specific expression has a specific compile-time type.  
+Caution: Casting is a powerful but dangerous tool.  
+Essentially, casting is telling the compiler not to do its type-checking duties - telling it to trust you and act the way you want it to  
+
+### Higher Order Functions
+In old school Java (Java 7 and earlier), memory boxes (variables) could not contain pointers to functions  
+
+IntUnaryFunction
+
+```java
+public interface IntUnaryFunction {
+    int apply(int x);
+}
+```
+```java
+public class TenX implements IntUnaryFunction {
+    /* Returns ten times the argument. */
+    public int apply(int x) {
+        return 10 * x;
+    }
+}
+```
+```java
+public static int do_twice(IntUnaryFunction f, int x) {
+    return f.apply(f.apply(x));
+}
+
+public static void main(String[] args) {
+    IntUnaryFunction tenX = new TenX();
+    System.out.println(do_twice(tenX(), 2));
+}
+```
+
+above equals to  
+```python
+def tenX(x):
+    return 10 * x
+def do_twice(f, x):
+    return f(f(x))
+
+print(do_twice(tenX, 2))
+```
+
+### Inheritance Cheatsheet
+Invocation of overridden methods follows two simple rules:
+
+- Compiler plays it safe and only allows us to do things according to the static type.
+- For overridden methods (not overloaded methods), the actual method invoked is based on the dynamic type of the invoking expression
+- Can use casting to overrule compiler type checking.
