@@ -334,3 +334,33 @@ Java does not allow us to create an array of generic objects due to an obscure i
   `Glorp[] items = (Glorp []) new Object[8];`
 
 This will yield a compilation warning, but it's just something we'll have to live with
+
+# 4 Inheritance, Implements
+## 4.1 Intro and interfaces
+interface is a specification of what a list is able to do, not how to do it
+
+### Overriding
+When implementing the required functions in the subclass, it's useful (and actually required in 61B) to include the `@Override` tag right on top of the method signature
+
+### Interface Inheritance
+Interface Inheritance refers to a relationship in which a subclass inherits all the methods/behaviors of the superclass  
+the interface includes all the method signatures, but not implementations. It's up to the subclass to actually provide those implementations  
+
+### Implementation Inheritance
+These methods identify how hypernyms of List61B should behave  
+In order to do this, you must include the default keyword in the method signature  
+
+### Static Type and Dynamic Type
+`List61B<String> lst = new SLList<String>();`  
+In the above declaration and instantiation, lst is of type "List61B". This is called the "static type"  
+
+When Java runs a method that is overriden, it searches for the appropriate method signature in it's dynamic type and runs it  
+**IMPORTANT: This does not work for overloaded methods!**  
+
+### Interface Inheritance vs Implementation Inheritance
+- Interface inheritance (what): Simply tells what the subclasses should be able to do.
+  - EX) all lists should be able to print themselves, how they do it is up to them.
+- Implementation inheritance (how): Tells the subclasses how they should behave.
+  - EX) Lists should print themselves exactly this way: by getting each element in order and then printing them.
+
+When you are creating these hierarchies, remember that the relationship between a subclass and a superclass should be an **"is-a"** relationship  
