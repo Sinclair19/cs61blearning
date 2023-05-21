@@ -453,3 +453,74 @@ Invocation of overridden methods follows two simple rules:
 - Compiler plays it safe and only allows us to do things according to the static type.
 - For overridden methods (not overloaded methods), the actual method invoked is based on the dynamic type of the invoking expression
 - Can use casting to overrule compiler type checking.
+
+### Dynamic Method Selection Puzzle
+
+Rules:
+- Compiler allows memory box to hold any subtype
+- Compiler allows calls based on static type
+- Overridden non-static methods are selected at run time based on dynamic type
+  - Everything else is based on static type, including overloaded methods
+  - Note, no overloadedmethods for problem at left
+
+## 4.3 Subtype Polymorphism vs. HoFs
+Subtype Polymorphism
+Polymorphism: providing a single interface to entities of different types  
+
+In Java, polymorphism refers to how objects can have many forms or types  
+In object-oriented programming, polymorphism relates to how an object can be regarded as an instance of its own class, an instance of its superclass, an instance of its superclass's superclass, and so on.  
+
+### Max Function
+In Python or C++, the way that the > operator works could be **redefined** to work in different ways when applied to different types.  
+Java does not have this capability  
+
+```java
+public int compareTo(Object o) {
+        Dog uddaDog = (Dog) o;
+        // below can be replaced with return this.size - uddaDog.size;
+        if (this.size < uddaDog.size) {
+            return -1;
+        } else if (this.size == uddaDog.size) {
+            return 0;
+        }
+        return 1;
+    }
+```
+Notice that since compareTo takes in any arbitrary Object o, we have to cast the input to a Dog to make our comparison using the size instance variable.  
+
+### Comparables
+Instead of using our personally created interface `OurComparable`, we now use the real, built-in interface, `Comparable`. As a result, we can take advantage of all the libraries that already exist and use `Comparable`. 
+
+### Comparator
+Since a comparator is an object, the way we'll use `Comparator` is by writing a nested class inside Dog that implements the `Comparator` interface.
+```java
+import java.util.Comparator;
+
+public class Dog implements Comparable<Dog> {
+    ...
+    public int compareTo(Dog uddaDog) {
+        return this.size - uddaDog.size;
+    }
+
+    private static class NameComparator implements Comparator<Dog> {
+        public int compare(Dog a, Dog b) {
+            return a.name.compareTo(b.name);
+        }
+    }
+
+    public static Comparator<Dog> getNameComparator() {
+        return new NameComparator();
+    }
+}
+```
+
+```java
+Comparator<Dog> nc = Dog.getNameComparator();
+```
+
+### Summarize
+interfaces in Java provide us with the ability to make **callbacks**  
+
+- A Comparable is imbedded within the object itself, and it defines the natural ordering of a type. 
+- A Comparator, on the other hand, is more like a third party machine that compares two objects to each other. 
+  - Since there's only room for **one** compareTo method, if we want multiple ways to compare, we must turn to Comparator.
