@@ -524,3 +524,111 @@ interfaces in Java provide us with the ability to make **callbacks**
 - A Comparable is imbedded within the object itself, and it defines the natural ordering of a type. 
 - A Comparator, on the other hand, is more like a third party machine that compares two objects to each other. 
   - Since there's only room for **one** compareTo method, if we want multiple ways to compare, we must turn to Comparator.
+
+# 6 Exceptions, Iterators, Iterables, Object Methods
+
+## 6.1 Lists, Sets, ArraySet
+
+### Lists in Real Java Code
+`java.util.List<Integer> L = new java.util.ArrayList<>();`  
+
+### Sets
+Sets are a collection of unique elements - you can only have one copy of each element. There is also no sense of order.  
+
+### ArraySet
+- `add(value)`: add the value to the set if not already present
+- `contains(value)`: check to see if ArraySet contains the key
+- `size()`: return number of values
+
+## 6.2 Throwing Exceptions
+
+`throw new ExceptionObject(parameter1, ...)`  
+`IllegalArgumentExceptio` takes in one parameter  
+
+## 6.3 Iteration
+
+### Enhanced For Loop
+`public Iterator<E> iterator();`  
+
+We check that there are still items left with `seer.hasNext()`, which will return true if there are unseen items remaining, and false if all items have been processed.  
+`seer.next()` does two things at once.  
+It returns the next element of the list, and here we print it out.  
+It also advances the iterator by one item. In this way, the iterator will only inspect each item once.  
+
+### Implementing Iterators
+When `iterator()` being called, we must check
+- Does the List interface have an `iterator()` method
+- Does the Iterator interface have `next/hasNext()` method
+
+The List interface extends the Iterable interface, inheriting the abstract iterator() method.  
+(Actually, List extends Collection which extends Iterable, but it's easier to codethink of this way to start.)  
+
+## 6.4 Object Methods
+All classes inherit from the overarching Object class. The methods that are inherited are as follows:
+- `String toString()`
+- `boolean equals(Object obj)`
+- `Class <?> getClass()`
+- `int hashCode()`
+- `protected Objectclone()`
+- `protected void finalize()`
+- `void notify()`
+- `void notifyAll()`
+- `void wait()`
+- `void wait(long timeout)`
+- `void wait(long timeout, int nanos)`
+
+### `toString()`
+The toString() method provides a string representation of an object  
+The default Object class' toString() method prints the location of the object in memory  
+
+string builder way  
+```java
+public String toString() {
+        StringBuilder returnSB = new StringBuilder("{");
+        for (int i = 0; i < size - 1; i += 1) {
+            returnSB.append(items[i].toString());
+            returnSB.append(", ");
+        }
+        returnSB.append(items[size - 1]);
+        returnSB.append("}");
+        return returnSB.toString();
+    }
+```
+
+### `equals()`
+`equals()` and `==` have different behaviors in Java.  
+`==` Checks if two objects are actually the same object in memory.   
+Remember, pass-by-value! == checks if two boxes hold the same thing
+
+Overrides `equals(Object o)` method in object class
+```java
+public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null) {
+            return false;
+        }
+        if (other.getClass() != this.getClass()) {
+            return false;
+        }
+        ArraySet<T> o = (ArraySet<T>) other;
+        if (o.size() != this.size()) {
+            return false;
+        }
+        for (T item : this) {
+            if (!o.contains(item)) {
+                return false;
+            }
+        }
+        return true;
+    }
+```
+A couple of rules to adhere to while implementing your `.equals()` method are as follows:  
+1. equals must be an equivalence relation
+   1. reflexive: x.equals(x) is true
+   2. symmetric: x.equals(y) if and only if y.equals(x)
+   3. transitive: x.equals(y) and y.equals(z) implies x.equals(z)
+2. It must take an Object argument, in order to override the original .equals() method
+3. It must be consistent if x.equals(y), then as long as x and y remain unchanged: x must continue to equal y
+4. It is never true for null x.equals(null) must be false
