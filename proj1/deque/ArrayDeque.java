@@ -144,7 +144,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         }
 
         public T next() {
-            T returnItem = items[place];
+            T returnItem = get(place);
             place += 1;
             return returnItem;
         }
@@ -153,5 +153,30 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     @Override
     public Iterator<T> iterator() {
         return new ArrayDequeIterator();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null) {
+            return false;
+        }
+        if (! (o instanceof Deque)) {
+            return false;
+        }
+        Deque<T> other = (Deque<T>) o;
+        if (this.size() != other.size()) {
+            return false;
+        }
+        int i = 0;
+        for (T item : this) {
+            if (!other.get(i).equals(item)) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
     }
 }

@@ -246,4 +246,52 @@ public class ArrayDequecircleTest {
             i += 1;
         }
     }
+
+    @Test
+    public void equalsTest() {
+        ArrayDequecircle<Integer> first = new ArrayDequecircle<>();
+        first.addFirst(4);
+        first.addFirst(3);
+        first.addFirst(2);
+        first.addFirst(1);
+
+        ArrayDequecircle<Integer> second = new ArrayDequecircle<>();
+        second.addFirst(4);
+        second.addFirst(3);
+        second.addFirst(2);
+        second.addFirst(1);
+
+        // test with a same ArrayDeque
+        assertTrue(first.equals(second));
+
+        // test with self
+        assertTrue(first.equals(first));
+
+        // test with size not equal Deque
+        second.removeLast();
+        assertFalse(first.equals(second));
+
+        // test with not equal Deque
+        second.addLast(5);
+        assertFalse(first.equals(second));
+
+        // test with null
+        assertFalse(first.equals(null));
+
+        ArrayDeque<Integer> third = new ArrayDeque<>();
+        third.addFirst(4);
+        third.addFirst(3);
+        third.addFirst(2);
+        third.addFirst(1);
+
+        // test with other deque implement
+        assertTrue(first.equals(third));
+
+        third.removeLast();
+        assertFalse(first.equals(third));
+
+        third.addLast(5);
+        assertFalse(first.equals(third));
+
+    }
 }
