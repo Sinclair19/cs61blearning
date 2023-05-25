@@ -6,6 +6,8 @@ import static org.junit.Assert.*;
 
 import edu.princeton.cs.algs4.StdRandom;
 
+import java.util.Iterator;
+
 
 /** Performs some basic linked list tests. */
 public class ArrayDequeTest {
@@ -17,7 +19,7 @@ public class ArrayDequeTest {
      * && is the "and" operation. */
     public void addIsEmptySizeTest() {
 
-        ArrayDeque<String> lld1 = new ArrayDeque<String>();
+        ArrayDeque<String> lld1 = new ArrayDeque<>();
 
 		assertTrue("A newly initialized LLDeque should be empty", lld1.isEmpty());
 		lld1.addFirst("front");
@@ -38,10 +40,10 @@ public class ArrayDequeTest {
     }
 
     @Test
-    /** Adds an item, then removes an item, and ensures that dll is empty afterwards. */
+    /** Adds an item, then removes an item, and ensures that dll is empty afterward. */
     public void addRemoveTest() {
 
-        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
+        ArrayDeque<Integer> lld1 = new ArrayDeque<>();
 		// should be empty
 		assertTrue("lld1 should be empty upon initialization", lld1.isEmpty());
 
@@ -78,9 +80,9 @@ public class ArrayDequeTest {
     /* Check if you can create ArrayDeques with different parameterized types*/
     public void multipleParamTest() {
 
-        ArrayDeque<String>  lld1 = new ArrayDeque<String>();
-        ArrayDeque<Double>  lld2 = new ArrayDeque<Double>();
-        ArrayDeque<Boolean> lld3 = new ArrayDeque<Boolean>();
+        ArrayDeque<String>  lld1 = new ArrayDeque<>();
+        ArrayDeque<Double>  lld2 = new ArrayDeque<>();
+        ArrayDeque<Boolean> lld3 = new ArrayDeque<>();
 
         lld1.addFirst("string");
         lld2.addFirst(3.14159);
@@ -95,12 +97,12 @@ public class ArrayDequeTest {
     /* check if null is return when removing from an empty ArrayDeque. */
     public void emptyNullReturnTest() {
 
-        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
+        ArrayDeque<Integer> lld1 = new ArrayDeque<>();
 
         boolean passed1 = false;
         boolean passed2 = false;
-        assertEquals("Should return null when removeFirst is called on an empty Deque,", null, lld1.removeFirst());
-        assertEquals("Should return null when removeLast is called on an empty Deque,", null, lld1.removeLast());
+        assertNull("Should return null when removeFirst is called on an empty Deque,", lld1.removeFirst());
+        assertNull("Should return null when removeLast is called on an empty Deque,", lld1.removeLast());
 
     }
 
@@ -108,7 +110,7 @@ public class ArrayDequeTest {
     /* Add large number of elements to deque; check if order is correct. */
     public void bigLLDequeTest() {
 
-        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
+        ArrayDeque<Integer> lld1 = new ArrayDeque<>();
         for (int i = 0; i < 100000; i++) {
             lld1.addLast(i);
         }
@@ -224,6 +226,27 @@ public class ArrayDequeTest {
                 if (L.size() > 0 && B.size() > 0) {
                     assertEquals(L.removeLast(), B.removeLast());}
             }
+        }
+    }
+
+    @Test
+    public void IteratorTest() {
+        ArrayDeque<Integer> lld1 = new ArrayDeque<>();
+        lld1.addLast(1);
+        lld1.addLast(2);
+        lld1.addLast(3);
+        lld1.addLast(4);
+        Iterator<Integer> lld1Iterator = lld1.iterator();
+        for (int i = 0; i < lld1.size(); i += 1) {
+            assertTrue(lld1Iterator.hasNext());
+            assertEquals(lld1.get(i), lld1Iterator.next());
+        }
+        assertFalse(lld1Iterator.hasNext());
+
+        int i = 0;
+        for (int item : lld1) {
+            assertEquals((int) lld1.get(i), item);
+            i += 1;
         }
     }
 }

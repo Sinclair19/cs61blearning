@@ -1,6 +1,8 @@
 package deque;
 
-public class ArrayDequecircle<T> {
+import java.util.Iterator;
+
+public class ArrayDequecircle<T> implements Iterable<T> {
     private T[] items;
     private int size;
     private int end;
@@ -138,4 +140,26 @@ public class ArrayDequecircle<T> {
         System.out.println();
     }
 
+    private class ArrayDequecircleIterator implements Iterator<T> {
+        private int place;
+
+        public ArrayDequecircleIterator() {
+            place = 0;
+        }
+
+        public boolean hasNext() {
+            return place < size;
+        }
+
+        public T next() {
+            T returnItem = items[place];
+            place += 1;
+            return returnItem;
+        }
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new ArrayDequecircleIterator();
+    }
 }
