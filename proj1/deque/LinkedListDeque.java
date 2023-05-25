@@ -150,4 +150,29 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
     public Iterator<T> iterator() {
         return new LinkedListIterator();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null) {
+            return false;
+        }
+        if (! (o instanceof Deque)) {
+            return false;
+        }
+        Deque<T> other = (Deque<T>) o;
+        if (this.size() != other.size()) {
+            return false;
+        }
+        int i = 0;
+        for (T item : this) {
+            if (!other.get(i).equals(item)) {
+                return false;
+            }
+            i += 1;
+        }
+        return true;
+    }
 }
