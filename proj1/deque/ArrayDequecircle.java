@@ -2,7 +2,7 @@ package deque;
 
 import java.util.Iterator;
 
-public class ArrayDequecircle<T> implements Iterable<T> {
+public class ArrayDequecircle<T> implements Deque<T>, Iterable<T> {
     private T[] items;
     private int size;
     private int end;
@@ -16,7 +16,7 @@ public class ArrayDequecircle<T> implements Iterable<T> {
         end = items.length - 1;
         backsize = 0;
     }
-    
+
     public void resize(int capacity) {
         T[] temp = (T[]) new Object[capacity];
         System.arraycopy(items, end, temp, 0, backsize);
@@ -33,6 +33,7 @@ public class ArrayDequecircle<T> implements Iterable<T> {
         }
     }
 
+    @Override
     public void addFirst(T item) {
         if (end == (size - backsize - 1) || size == items.length) {
             resize((int) ((size + 1) * 1.2));
@@ -50,6 +51,7 @@ public class ArrayDequecircle<T> implements Iterable<T> {
         size += 1;
     }
 
+    @Override
     public void addLast(T item) {
         if (end == (size - backsize - 1) || size == items.length) {
             resize((int) ((size + 1) * 1.2));
@@ -58,6 +60,7 @@ public class ArrayDequecircle<T> implements Iterable<T> {
         size += 1;
     }
 
+    @Override
     public T removeFirst() {
         if (size == 0) {
             return null;
@@ -78,6 +81,7 @@ public class ArrayDequecircle<T> implements Iterable<T> {
         return x;
     }
 
+    @Override
     public T removeLast() {
         if (size == 0) {
             return null;
@@ -90,6 +94,7 @@ public class ArrayDequecircle<T> implements Iterable<T> {
         return x;
     }
 
+    @Override
     public T get(int index) {
         if (index >= size) {
             return null;
@@ -121,13 +126,12 @@ public class ArrayDequecircle<T> implements Iterable<T> {
         return start + size - backsize - 1;
     }
 
-    public boolean isEmpty() {
-        return size == 0;
-    }
+    @Override
     public int size() {
         return size;
     }
 
+    @Override
     public void printDeque() {
         for (int i = end; i < items.length; i += 1) {
             System.out.print(items[i]);
