@@ -3,7 +3,7 @@ package deque;
 
 import java.util.Iterator;
 
-public class LinkedListDeque<T> implements Iterable<T> {
+public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
     private class Node {
         public Node prev;
         public T item;
@@ -37,6 +37,7 @@ public class LinkedListDeque<T> implements Iterable<T> {
         size = 1;
     }
 
+    @Override
     public void addFirst(T item) {
         Node Nextnode = sentinel.next;
         sentinel.next = new Node(item, sentinel, Nextnode);
@@ -44,6 +45,7 @@ public class LinkedListDeque<T> implements Iterable<T> {
         size += 1;
     }
 
+    @Override
     public void addLast(T item) {
         Node LastNode = sentinel.prev;
         sentinel.prev = new Node(item, LastNode, sentinel);
@@ -51,6 +53,7 @@ public class LinkedListDeque<T> implements Iterable<T> {
         size += 1;
     }
 
+    @Override
     public T removeFirst() {
         if (sentinel.next == sentinel) {
             return null;
@@ -65,6 +68,7 @@ public class LinkedListDeque<T> implements Iterable<T> {
         return first;
     }
 
+    @Override
     public T removeLast() {
         if (sentinel.prev == sentinel) {
             return null;
@@ -79,14 +83,12 @@ public class LinkedListDeque<T> implements Iterable<T> {
         return last;
     }
 
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
+    @Override
     public int size() {
         return size;
     }
 
+    @Override
     public void printDeque() {
         Node p = sentinel.next;
 
@@ -98,6 +100,7 @@ public class LinkedListDeque<T> implements Iterable<T> {
         System.out.println();
     }
 
+    @Override
     public T get(int index) {
         Node p = sentinel.next;
         while (index != 0) {
