@@ -136,6 +136,10 @@ public class ArrayDequeTest {
         lld1.addLast(4);
         lld1.printDeque();
         assertEquals((int) lld1.get(0), 4);
+        assertEquals((int) lld1.get(1), 3);
+        assertEquals((int) lld1.get(2), 2);
+        assertEquals((int) lld1.get(3), 1);
+        assertEquals((int) lld1.get(4), 4);
     }
 
     @Test
