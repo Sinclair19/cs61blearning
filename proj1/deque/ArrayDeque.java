@@ -85,9 +85,10 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         items[start] = null;
 
         start += 1;
+        size -= 1;
+
         dresizel();
 
-        size -= 1;
         return x;
     }
 
@@ -98,9 +99,10 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         }
         T x = getLast();
         items[start + size - 1] = null;
+        size -= 1;
+        
         dresizer();
 
-        size -= 1;
         return x;
     }
 
