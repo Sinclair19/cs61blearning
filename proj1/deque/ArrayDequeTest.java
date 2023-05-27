@@ -204,9 +204,9 @@ public class ArrayDequeTest {
         ArrayDeque<Integer> L = new ArrayDeque<>();
         LinkedListDeque<Integer> B = new LinkedListDeque<>();
 
-        int N = 5000;
+        int N = 1000;
         for (int i = 0; i < N; i += 1) {
-            int operationNumber = StdRandom.uniform(0, 4);
+            int operationNumber = StdRandom.uniform(0, 5);
             if (operationNumber == 0) {
                 // addLast
                 int randVal = StdRandom.uniform(0, 100);
@@ -227,9 +227,12 @@ public class ArrayDequeTest {
                     assertEquals(Llast, Blast);
                     //System.out.println("removelast(" + last + ")");
                 }
-            }else if (operationNumber == 3) {
+            } else if (operationNumber == 3) {
                 if (L.size() > 0 && B.size() > 0) {
                     assertEquals(L.removeLast(), B.removeLast());}
+            } else if (operationNumber == 4) {
+                if (L.size() > 0 && B.size() > 0) {
+                    assertEquals(L.removeFirst(), B.removeFirst());}
             }
         }
     }

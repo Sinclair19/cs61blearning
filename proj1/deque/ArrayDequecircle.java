@@ -78,9 +78,9 @@ public class ArrayDequecircle<T> implements Deque<T>, Iterable<T> {
             backsize -= 1;
         }
 
-        dresize();
-        
         size -= 1;
+        
+        dresize();
         return x;
     }
 
@@ -91,9 +91,9 @@ public class ArrayDequecircle<T> implements Deque<T>, Iterable<T> {
         }
         T x = getLast();
         items[getLastIndex()] = null;
-        dresize();
-
         size -= 1;
+        
+        dresize();
         return x;
     }
 

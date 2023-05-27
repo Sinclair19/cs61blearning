@@ -203,4 +203,17 @@ public class LinkedListDequeTest {
         third.addLast(5);
         assertFalse(first.equals(third));
     }
+
+    @Test
+    public void getRecursiveTest() {
+        LinkedListDeque<Integer> test = new LinkedListDeque<>();
+        test.addFirst(4);
+        test.addFirst(3);
+        test.addFirst(2);
+        test.addFirst(1);
+        assertEquals(test.get(0), test.getRecursive(0));
+        assertEquals(test.get(1), test.getRecursive(1));
+        assertEquals(test.get(2), test.getRecursive(2));
+        assertEquals(test.get(3), test.getRecursive(3));
+    }
 }
