@@ -10,7 +10,7 @@ public class MaxArrayDeque<T> extends ArrayDeque<T> {
         comparator = c;
     }
 
-    private T find_max(Comparator<T> c) {
+    private T findMax(Comparator<T> c) {
         if (this.isEmpty()) {
             return null;
         }
@@ -25,11 +25,11 @@ public class MaxArrayDeque<T> extends ArrayDeque<T> {
     }
 
     public T max() {
-        return find_max(comparator);
+        return findMax(comparator);
     }
 
     public T max(Comparator<T> c) {
-        return find_max(c);
+        return findMax(c);
     }
     
 }
