@@ -20,7 +20,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     }
 
     private void resizel(int capacity) {
-        int right_space = items.length - start;
+        int right_space = items.length + 1 - start; // lenght count from 1, start count from 0
         int resized_size = capacity + right_space;
         T[] a = (T[]) new Object[resized_size];
         System.arraycopy(items, start, a, capacity, size);
@@ -37,9 +37,9 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     }
 
     private void dresizel() {
-        int length = start;
+        int length = start + size;
         if ((double) size / (length) < 0.25) {
-            resizer(size * 3); // let right size / length = 0.25
+            resizel(size * 4); // let right size / length = 0.25
         }
     }
 
@@ -59,7 +59,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     @Override
     public void addFirst(T item) {
         if (start == 0) {
-            resizel((int) ((size + 1) * 1.2));
+            resizel((int) Math.round((size + 1) * 1.2)); // use math.round before cast to int to avoid loss bit
         }
         items[start - 1] = item;
         start -= 1;
@@ -69,7 +69,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     @Override
     public void addLast(T item) {
         if (start + size == items.length) {
-            resizer((int) ((size + 1) * 1.2));
+            resizer((int) Math.round((size + 1) * 1.2));
         }
         items[start + size] = item;
         size += 1;

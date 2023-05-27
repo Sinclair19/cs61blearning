@@ -36,7 +36,7 @@ public class ArrayDequecircle<T> implements Deque<T>, Iterable<T> {
     @Override
     public void addFirst(T item) {
         if (end == (size - backsize - 1) || size == items.length) {
-            resize((int) ((size + 1) * 1.2));
+            resize((int) Math.round((size + 1) * 1.2)); // use math.round before cast to int to avoid loss bit
         }
         if (items[0] != null && backsize >= 0) {
             if (items[end] != null) {
@@ -53,10 +53,10 @@ public class ArrayDequecircle<T> implements Deque<T>, Iterable<T> {
 
     @Override
     public void addLast(T item) {
-        if (end == (size - backsize - 1) || size == items.length) {
-            resize((int) ((size + 1) * 1.2));
+        if (end == getLastIndex() || size == items.length) {
+            resize((int) Math.round((size + 1) * 1.2));
         }
-        items[size - backsize] = item;
+        items[getLastIndex() + 1] = item;
         size += 1;
     }
 
@@ -71,7 +71,9 @@ public class ArrayDequecircle<T> implements Deque<T>, Iterable<T> {
             start += 1;
         }
         if (backsize > 0) {
-            end += 1;
+            if(end + 1 < items.length) { //check if end + 1 is bigger than length
+                end += 1;
+            }
             backsize -= 1;
         }
 

@@ -131,6 +131,12 @@ public class ArrayDequecircleTest {
         lld1.addFirst(4);
         lld1.addLast(4);
         assertEquals((int) lld1.get(0), 4);
+        lld1.addFirst(5);
+        lld1.addFirst(6);
+        lld1.addFirst(7);
+        assertEquals((int) lld1.get(0), 7);
+        lld1.addFirst(8);
+        assertEquals((int) lld1.get(0), 8);
     }
 
     @Test
@@ -179,6 +185,8 @@ public class ArrayDequecircleTest {
         lld1.removeFirst();
         lld1.addFirst(2);
         lld1.addFirst(1);
+        lld1.addFirst(1);
+        assertEquals((int) lld1.removeFirst() , 1);
         assertEquals((int) lld1.removeFirst() , 1);
         assertEquals((int) lld1.removeFirst() , 2);
         assertEquals((int) lld1.removeFirst() , 3);
