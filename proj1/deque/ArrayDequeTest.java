@@ -1,13 +1,11 @@
 package deque;
 
-import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.StdRandom;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
-import edu.princeton.cs.algs4.StdRandom;
-
 import java.util.Iterator;
+
+import static org.junit.Assert.*;
 
 
 /** Performs some basic linked list tests. */
@@ -21,7 +19,6 @@ public class ArrayDequeTest {
     public void addIsEmptySizeTest() {
 
         ArrayDeque<String> lld1 = new ArrayDeque<>();
-
         assertTrue("A newly initialized LLDeque should be empty", lld1.isEmpty());
         lld1.addFirst("front");
 
@@ -81,8 +78,8 @@ public class ArrayDequeTest {
     /* Check if you can create ArrayDeques with different parameterized types*/
     public void multipleParamTest() {
 
-        ArrayDeque<String>  lld1 = new ArrayDeque<>();
-        ArrayDeque<Double>  lld2 = new ArrayDeque<>();
+        ArrayDeque<String> lld1 = new ArrayDeque<>();
+        ArrayDeque<Double> lld2 = new ArrayDeque<>();
         ArrayDeque<Boolean> lld3 = new ArrayDeque<>();
 
         lld1.addFirst("string");
@@ -95,13 +92,11 @@ public class ArrayDequeTest {
     }
 
     @Test
-    /* check if null is return when removing from an empty ArrayDeque. */
+    /* check if null is return when removing from an empty ArrayDequecircle. */
     public void emptyNullReturnTest() {
 
         ArrayDeque<Integer> lld1 = new ArrayDeque<>();
 
-        boolean passed1 = false;
-        boolean passed2 = false;
         assertNull("Should return null when removeFirst is called on an empty Deque,",
                 lld1.removeFirst());
         assertNull("Should return null when removeLast is called on an empty Deque,",
@@ -137,10 +132,12 @@ public class ArrayDequeTest {
         lld1.addFirst(4);
         lld1.addLast(4);
         assertEquals((int) lld1.get(0), 4);
-        assertEquals((int) lld1.get(1), 3);
-        assertEquals((int) lld1.get(2), 2);
-        assertEquals((int) lld1.get(3), 1);
-        assertEquals((int) lld1.get(4), 4);
+        lld1.addFirst(5);
+        lld1.addFirst(6);
+        lld1.addFirst(7);
+        assertEquals((int) lld1.get(0), 7);
+        lld1.addFirst(8);
+        assertEquals((int) lld1.get(0), 8);
     }
 
     @Test
@@ -172,6 +169,7 @@ public class ArrayDequeTest {
     @Test
     public void removeTest() {
         ArrayDeque<Integer> lld1 = new ArrayDeque<>();
+        //lld1.addFirst(5);
         lld1.addLast(1);
         lld1.addLast(2);
         lld1.addLast(3);
@@ -188,6 +186,8 @@ public class ArrayDequeTest {
         lld1.removeFirst();
         lld1.addFirst(2);
         lld1.addFirst(1);
+        lld1.addFirst(1);
+        assertEquals((int) lld1.removeFirst(), 1);
         assertEquals((int) lld1.removeFirst(), 1);
         assertEquals((int) lld1.removeFirst(), 2);
         assertEquals((int) lld1.removeFirst(), 3);
@@ -202,8 +202,8 @@ public class ArrayDequeTest {
 
     @Test
     public void randomizedTest() {
-        ArrayDeque<Integer> L = new ArrayDeque<>();
-        LinkedListDeque<Integer> B = new LinkedListDeque<>();
+        LinkedListDeque<Integer> L = new LinkedListDeque<>();
+        ArrayDeque<Integer> B = new ArrayDeque<>();
 
         int N = 10000;
         for (int i = 0; i < N; i += 1) {
@@ -230,7 +230,8 @@ public class ArrayDequeTest {
                 }
             } else if (operationNumber == 3) {
                 if (L.size() > 0 && B.size() > 0) {
-                    assertEquals(L.removeLast(), B.removeLast());}
+                    assertEquals(L.removeLast(), B.removeLast());
+                }
             } else if (operationNumber == 4) {
                 if (L.size() > 0 && B.size() > 0) {
                     assertEquals(L.removeFirst(), B.removeFirst());}
@@ -290,7 +291,7 @@ public class ArrayDequeTest {
         // test with null
         assertFalse(first.equals(null));
 
-        ArrayDequecircle<Integer> third = new ArrayDequecircle<>();
+        ArrayDeque2<Integer> third = new ArrayDeque2<>();
         third.addFirst(4);
         third.addFirst(3);
         third.addFirst(2);
@@ -304,5 +305,21 @@ public class ArrayDequeTest {
 
         third.addLast(5);
         assertFalse(first.equals(third));
+
+    }
+
+    @Test
+    public void removeBackTest() {
+        ArrayDeque<Integer> first = new ArrayDeque<>();
+        first.addFirst(0);
+        assertEquals(0, (int) first.removeLast());
+        first.addFirst(2);
+        first.addFirst(3);
+        first.isEmpty();
+        first.addFirst(5);
+        first.addFirst(6);
+        first.addFirst(7);
+        assertEquals(2, (int) first.removeLast());
+        assertEquals(3, (int) first.removeLast());
     }
 }

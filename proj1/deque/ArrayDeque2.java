@@ -2,30 +2,24 @@ package deque;
 
 import java.util.Iterator;
 
-public class ArrayDequecircle<T> implements Deque<T>, Iterable<T> {
+public class ArrayDeque2<T> implements Deque<T>, Iterable<T> {
     private T[] items;
     private int size;
-    private int end;
-    private int backsize;
     private int start;
 
-    public ArrayDequecircle() {
+    public ArrayDeque2() {
         items = (T[]) new Object[8];
         start = 0;
         size = 0;
-        end = items.length - 1;
-        backsize = 0;
     }
 
     private void resize(int capacity) {
         capacity = Math.max(capacity, 8);
-        T[] temp = (T[]) new Object[capacity];
-        System.arraycopy(items, end, temp, 0, backsize);
-        System.arraycopy(items, start, temp, backsize, size - backsize);
-        start = 0;
-        end = temp.length - 1;
-        backsize = 0;
-        items = temp;
+        T[] a = (T[]) new Object[capacity];
+        int frontHalf = (int) Math.round((capacity - size) / 2.0) ;
+        System.arraycopy(items, start, a, frontHalf, size);
+        start = frontHalf;
+        items = a;
     }
 
     private void dresize() {
@@ -34,31 +28,31 @@ public class ArrayDequecircle<T> implements Deque<T>, Iterable<T> {
         }
     }
 
+    private void checkFirstNoNull() {
+        int half = (int) Math.round(items.length / 2.0);
+        while (start < half && items[start] == null) {
+            start += 1;
+        }
+    }
+
     @Override
     public void addFirst(T item) {
-        if (end == (size - backsize - 1) || size == items.length) {
+        checkFirstNoNull();
+        if (start == 0) {
             resize((int) Math.round((size + 1) * 1.2));
             // use math.round before cast to int to avoid loss bit
         }
-        if (items[0] != null && backsize >= 0) {
-            if (items[end] != null) {
-                end -= 1;
-            }
-            backsize += 1;
-        }
-        if (start > 0) {
-            start -= 1;
-        }
-        items[getFirstIndex()] = item;
+        items[start - 1] = item;
+        start -= 1;
         size += 1;
     }
 
     @Override
     public void addLast(T item) {
-        if (end == getLastIndex() || size == items.length) {
+        if (start + size == items.length) {
             resize((int) Math.round((size + 1) * 1.2));
         }
-        items[getLastIndex() + 1] = item;
+        items[start + size] = item;
         size += 1;
     }
 
@@ -68,20 +62,13 @@ public class ArrayDequecircle<T> implements Deque<T>, Iterable<T> {
             return null;
         }
         T x = getFirst();
-        items[getFirstIndex()] = null;
-        if (backsize == 0) {
-            start += 1;
-        }
-        if (backsize > 0) {
-            if (end + 1 < items.length) { //check if end + 1 is bigger than length
-                end += 1;
-            }
-            backsize -= 1;
-        }
+        items[start] = null;
 
+        start += 1;
         size -= 1;
-        
+
         dresize();
+
         return x;
     }
 
@@ -90,14 +77,12 @@ public class ArrayDequecircle<T> implements Deque<T>, Iterable<T> {
         if (size == 0) {
             return null;
         }
-        if (start == 0) {
-            resize(items.length);
-        }
         T x = getLast();
-        items[getLastIndex()] = null;
+        items[start + size - 1] = null;
         size -= 1;
         
         dresize();
+
         return x;
     }
 
@@ -106,31 +91,14 @@ public class ArrayDequecircle<T> implements Deque<T>, Iterable<T> {
         if (index >= size) {
             return null;
         }
-        if (backsize > 0) {
-            if (index < backsize) {
-                return items[end + index];
-            }
-            return items[index - backsize];
-        }
         return items[start + index];
     }
 
     private T getFirst() {
-        return items[getFirstIndex()];
-    }
-
-    private int getFirstIndex() {
-        if (backsize > 0) {
-            return end;
-        }
-        return start;
+        return items[start];
     }
     private T getLast() {
-        return items[getLastIndex()];
-    }
-
-    private int getLastIndex() {
-        return start + size - backsize - 1;
+        return items[start + size - 1];
     }
 
     @Override
@@ -140,21 +108,17 @@ public class ArrayDequecircle<T> implements Deque<T>, Iterable<T> {
 
     @Override
     public void printDeque() {
-        for (int i = end; i < items.length; i += 1) {
-            System.out.print(items[i]);
-            System.out.print(' ');
-        }
-        for (int i = start; i < size - end; i += 1) {
+        for (int i = start; i < start + size; i += 1) {
             System.out.print(items[i]);
             System.out.print(' ');
         }
         System.out.println();
     }
 
-    private class ArrayDequecircleIterator implements Iterator<T> {
+    private class ArrayDequeIterator implements Iterator<T> {
         private int place;
 
-        private ArrayDequecircleIterator() {
+        private ArrayDequeIterator() {
             place = 0;
         }
 
@@ -171,7 +135,7 @@ public class ArrayDequecircle<T> implements Deque<T>, Iterable<T> {
 
     @Override
     public Iterator<T> iterator() {
-        return new ArrayDequecircleIterator();
+        return new ArrayDequeIterator();
     }
 
     @Override

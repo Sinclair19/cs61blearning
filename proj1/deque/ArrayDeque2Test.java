@@ -1,15 +1,16 @@
 package deque;
 
-import edu.princeton.cs.algs4.StdRandom;
 import org.junit.Test;
-
-import java.util.Iterator;
 
 import static org.junit.Assert.*;
 
+import edu.princeton.cs.algs4.StdRandom;
+
+import java.util.Iterator;
+
 
 /** Performs some basic linked list tests. */
-public class ArrayDequecircleTest {
+public class ArrayDeque2Test {
 
     @Test
     /** Adds a few things to the list, checking isEmpty() and size() are correct,
@@ -18,7 +19,8 @@ public class ArrayDequecircleTest {
      * && is the "and" operation. */
     public void addIsEmptySizeTest() {
 
-        ArrayDequecircle<String> lld1 = new ArrayDequecircle<>();
+        ArrayDeque2<String> lld1 = new ArrayDeque2<>();
+
         assertTrue("A newly initialized LLDeque should be empty", lld1.isEmpty());
         lld1.addFirst("front");
 
@@ -41,7 +43,7 @@ public class ArrayDequecircleTest {
     /** Adds an item, then removes an item, and ensures that dll is empty afterward. */
     public void addRemoveTest() {
 
-        ArrayDequecircle<Integer> lld1 = new ArrayDequecircle<>();
+        ArrayDeque2<Integer> lld1 = new ArrayDeque2<>();
         // should be empty
         assertTrue("lld1 should be empty upon initialization", lld1.isEmpty());
 
@@ -58,7 +60,7 @@ public class ArrayDequecircleTest {
     /* Tests removing from an empty deque */
     public void removeEmptyTest() {
 
-        ArrayDequecircle<Integer> lld1 = new ArrayDequecircle<>();
+        ArrayDeque2<Integer> lld1 = new ArrayDeque2<>();
         lld1.addFirst(3);
 
         lld1.removeLast();
@@ -78,9 +80,9 @@ public class ArrayDequecircleTest {
     /* Check if you can create ArrayDeques with different parameterized types*/
     public void multipleParamTest() {
 
-        ArrayDequecircle<String>  lld1 = new ArrayDequecircle<>();
-        ArrayDequecircle<Double>  lld2 = new ArrayDequecircle<>();
-        ArrayDequecircle<Boolean> lld3 = new ArrayDequecircle<>();
+        ArrayDeque2<String> lld1 = new ArrayDeque2<>();
+        ArrayDeque2<Double> lld2 = new ArrayDeque2<>();
+        ArrayDeque2<Boolean> lld3 = new ArrayDeque2<>();
 
         lld1.addFirst("string");
         lld2.addFirst(3.14159);
@@ -92,11 +94,13 @@ public class ArrayDequecircleTest {
     }
 
     @Test
-    /* check if null is return when removing from an empty ArrayDequecircle. */
+    /* check if null is return when removing from an empty ArrayDeque. */
     public void emptyNullReturnTest() {
 
-        ArrayDequecircle<Integer> lld1 = new ArrayDequecircle<>();
+        ArrayDeque2<Integer> lld1 = new ArrayDeque2<>();
 
+        boolean passed1 = false;
+        boolean passed2 = false;
         assertNull("Should return null when removeFirst is called on an empty Deque,",
                 lld1.removeFirst());
         assertNull("Should return null when removeLast is called on an empty Deque,",
@@ -108,7 +112,7 @@ public class ArrayDequecircleTest {
     /* Add large number of elements to deque; check if order is correct. */
     public void bigLLDequeTest() {
 
-        ArrayDequecircle<Integer> lld1 = new ArrayDequecircle<>();
+        ArrayDeque2<Integer> lld1 = new ArrayDeque2<>();
         for (int i = 0; i < 100000; i++) {
             lld1.addLast(i);
         }
@@ -125,24 +129,22 @@ public class ArrayDequecircleTest {
 
     @Test
     public void getTest() {
-        ArrayDequecircle<Integer> lld1 = new ArrayDequecircle<>();
+        ArrayDeque2<Integer> lld1 = new ArrayDeque2<>();
         lld1.addFirst(1);
         lld1.addFirst(2);
         lld1.addFirst(3);
         lld1.addFirst(4);
         lld1.addLast(4);
         assertEquals((int) lld1.get(0), 4);
-        lld1.addFirst(5);
-        lld1.addFirst(6);
-        lld1.addFirst(7);
-        assertEquals((int) lld1.get(0), 7);
-        lld1.addFirst(8);
-        assertEquals((int) lld1.get(0), 8);
+        assertEquals((int) lld1.get(1), 3);
+        assertEquals((int) lld1.get(2), 2);
+        assertEquals((int) lld1.get(3), 1);
+        assertEquals((int) lld1.get(4), 4);
     }
 
     @Test
     public void addFirstTest() {
-        ArrayDequecircle<Integer> lld1 = new ArrayDequecircle<>();
+        ArrayDeque2<Integer> lld1 = new ArrayDeque2<>();
         lld1.addFirst(4);
         lld1.addFirst(3);
         lld1.addFirst(2);
@@ -155,7 +157,7 @@ public class ArrayDequecircleTest {
 
     @Test
     public void addLastTest() {
-        ArrayDequecircle<Integer> lld1 = new ArrayDequecircle<>();
+        ArrayDeque2<Integer> lld1 = new ArrayDeque2<>();
         lld1.addLast(1);
         lld1.addLast(2);
         lld1.addLast(3);
@@ -168,8 +170,7 @@ public class ArrayDequecircleTest {
 
     @Test
     public void removeTest() {
-        ArrayDequecircle<Integer> lld1 = new ArrayDequecircle<>();
-        //lld1.addFirst(5);
+        ArrayDeque2<Integer> lld1 = new ArrayDeque2<>();
         lld1.addLast(1);
         lld1.addLast(2);
         lld1.addLast(3);
@@ -186,8 +187,6 @@ public class ArrayDequecircleTest {
         lld1.removeFirst();
         lld1.addFirst(2);
         lld1.addFirst(1);
-        lld1.addFirst(1);
-        assertEquals((int) lld1.removeFirst(), 1);
         assertEquals((int) lld1.removeFirst(), 1);
         assertEquals((int) lld1.removeFirst(), 2);
         assertEquals((int) lld1.removeFirst(), 3);
@@ -202,8 +201,8 @@ public class ArrayDequecircleTest {
 
     @Test
     public void randomizedTest() {
-        LinkedListDeque<Integer> L = new LinkedListDeque<>();
-        ArrayDequecircle<Integer> B = new ArrayDequecircle<>();
+        ArrayDeque2<Integer> L = new ArrayDeque2<>();
+        LinkedListDeque<Integer> B = new LinkedListDeque<>();
 
         int N = 10000;
         for (int i = 0; i < N; i += 1) {
@@ -234,14 +233,15 @@ public class ArrayDequecircleTest {
                 }
             } else if (operationNumber == 4) {
                 if (L.size() > 0 && B.size() > 0) {
-                    assertEquals(L.removeFirst(), B.removeFirst());}
+                    assertEquals(L.removeFirst(), B.removeFirst());
+                }
             }
         }
     }
 
     @Test
     public void iteratorTest() {
-        ArrayDequecircle<Integer> lld1 = new ArrayDequecircle<>();
+        ArrayDeque2<Integer> lld1 = new ArrayDeque2<>();
         lld1.addLast(1);
         lld1.addLast(2);
         lld1.addLast(3);
@@ -262,13 +262,13 @@ public class ArrayDequecircleTest {
 
     @Test
     public void equalsTest() {
-        ArrayDequecircle<Integer> first = new ArrayDequecircle<>();
+        ArrayDeque2<Integer> first = new ArrayDeque2<>();
         first.addFirst(4);
         first.addFirst(3);
         first.addFirst(2);
         first.addFirst(1);
 
-        ArrayDequecircle<Integer> second = new ArrayDequecircle<>();
+        ArrayDeque2<Integer> second = new ArrayDeque2<>();
         second.addFirst(4);
         second.addFirst(3);
         second.addFirst(2);
@@ -305,21 +305,5 @@ public class ArrayDequecircleTest {
 
         third.addLast(5);
         assertFalse(first.equals(third));
-
-    }
-
-    @Test
-    public void removeBackTest() {
-        ArrayDequecircle<Integer> first = new ArrayDequecircle<>();
-        first.addFirst(0);
-        assertEquals(0, (int) first.removeLast());
-        first.addFirst(2);
-        first.addFirst(3);
-        first.isEmpty();
-        first.addFirst(5);
-        first.addFirst(6);
-        first.addFirst(7);
-        assertEquals(2, (int) first.removeLast());
-        assertEquals(3, (int) first.removeLast());
     }
 }
