@@ -134,7 +134,6 @@ public class ArrayDequeTest {
         lld1.addFirst(3);
         lld1.addFirst(4);
         lld1.addLast(4);
-        lld1.printDeque();
         assertEquals((int) lld1.get(0), 4);
         assertEquals((int) lld1.get(1), 3);
         assertEquals((int) lld1.get(2), 2);
@@ -204,7 +203,7 @@ public class ArrayDequeTest {
         ArrayDeque<Integer> L = new ArrayDeque<>();
         LinkedListDeque<Integer> B = new LinkedListDeque<>();
 
-        int N = 1000;
+        int N = 10000;
         for (int i = 0; i < N; i += 1) {
             int operationNumber = StdRandom.uniform(0, 5);
             if (operationNumber == 0) {

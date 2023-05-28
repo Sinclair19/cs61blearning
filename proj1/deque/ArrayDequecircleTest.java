@@ -205,9 +205,9 @@ public class ArrayDequecircleTest {
         ArrayDeque<Integer> L = new ArrayDeque<>();
         ArrayDequecircle<Integer> B = new ArrayDequecircle<>();
 
-        int N = 5000;
+        int N = 10000;
         for (int i = 0; i < N; i += 1) {
-            int operationNumber = StdRandom.uniform(0, 4);
+            int operationNumber = StdRandom.uniform(0, 5);
             if (operationNumber == 0) {
                 // addLast
                 int randVal = StdRandom.uniform(0, 100);
@@ -232,6 +232,9 @@ public class ArrayDequecircleTest {
                 if (L.size() > 0 && B.size() > 0) {
                     assertEquals(L.removeLast(), B.removeLast());
                 }
+            } else if (operationNumber == 4) {
+                if (L.size() > 0 && B.size() > 0) {
+                    assertEquals(L.removeFirst(), B.removeFirst());}
             }
         }
     }
