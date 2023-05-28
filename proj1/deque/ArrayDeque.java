@@ -13,6 +13,15 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         size = 0;
     }
 
+    private void resize(int capacity) {
+        capacity = Math.max(capacity, 8);
+        T[] a = (T[]) new Object[capacity];
+        int frontHalf = (int) Math.round((capacity - size) / 2.0) ;
+        System.arraycopy(items, start, a, frontHalf, size);
+        start = frontHalf;
+        items = a;
+    }
+
     private void resizer(int capacity) {
         T[] a = (T[]) new Object[start + capacity];
         System.arraycopy(items, start, a, start, size);
@@ -27,6 +36,12 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
 
         start = capacity;
         items = a;
+    }
+
+    private void dresize() {
+        if ((double) size / items.length < 0.25 && items.length > 8) {
+            resize(size * 4);
+        }
     }
 
     private void dresizer() {
@@ -55,11 +70,18 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         items = temp;
     }
      */
+    private void checkFirstNoNull() {
+        int half = (int) Math.round(items.length / 2.0);
+        while (start < half && items[start] == null) {
+            start += 1;
+        }
+    }
 
     @Override
     public void addFirst(T item) {
+        checkFirstNoNull();
         if (start == 0) {
-            resizel((int) Math.round((size + 1) * 1.2));
+            resize((int) Math.round((size + 1) * 1.2));
             // use math.round before cast to int to avoid loss bit
         }
         items[start - 1] = item;
@@ -70,7 +92,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     @Override
     public void addLast(T item) {
         if (start + size == items.length) {
-            resizer((int) Math.round((size + 1) * 1.2));
+            resize((int) Math.round((size + 1) * 1.2));
         }
         items[start + size] = item;
         size += 1;
@@ -87,7 +109,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         start += 1;
         size -= 1;
 
-        dresizel();
+        dresize();
 
         return x;
     }
@@ -101,7 +123,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         items[start + size - 1] = null;
         size -= 1;
         
-        dresizer();
+        dresize();
 
         return x;
     }

@@ -18,6 +18,7 @@ public class ArrayDequecircle<T> implements Deque<T>, Iterable<T> {
     }
 
     public void resize(int capacity) {
+        capacity = Math.max(capacity, 8);
         T[] temp = (T[]) new Object[capacity];
         System.arraycopy(items, end, temp, 0, backsize);
         System.arraycopy(items, start, temp, backsize, size - backsize);
@@ -28,7 +29,7 @@ public class ArrayDequecircle<T> implements Deque<T>, Iterable<T> {
     }
 
     public void dresize() {
-        if ((double) size / items.length < 0.25) {
+        if ((double) size / items.length < 0.25 && items.length > 8) {
             resize(size * 4);
         }
     }
