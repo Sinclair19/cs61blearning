@@ -22,22 +22,22 @@ public class ArrayDequeTest {
 
         ArrayDeque<String> lld1 = new ArrayDeque<>();
 
-		assertTrue("A newly initialized LLDeque should be empty", lld1.isEmpty());
-		lld1.addFirst("front");
+        assertTrue("A newly initialized LLDeque should be empty", lld1.isEmpty());
+        lld1.addFirst("front");
 
-		// The && operator is the same as "and" in Python.
-		// It's a binary operator that returns true if both arguments true, and false otherwise.
+        // The && operator is the same as "and" in Python.
+        // It's a binary operator that returns true if both arguments true, and false otherwise.
         assertEquals(1, lld1.size());
         assertFalse("lld1 should now contain 1 item", lld1.isEmpty());
 
-		lld1.addLast("middle");
-		assertEquals(2, lld1.size());
+        lld1.addLast("middle");
+        assertEquals(2, lld1.size());
 
-		lld1.addLast("back");
-		assertEquals(3, lld1.size());
+        lld1.addLast("back");
+        assertEquals(3, lld1.size());
 
-		System.out.println("Printing out deque: ");
-		lld1.printDeque();
+        System.out.println("Printing out deque: ");
+        lld1.printDeque();
     }
 
     @Test
@@ -45,16 +45,16 @@ public class ArrayDequeTest {
     public void addRemoveTest() {
 
         ArrayDeque<Integer> lld1 = new ArrayDeque<>();
-		// should be empty
-		assertTrue("lld1 should be empty upon initialization", lld1.isEmpty());
+        // should be empty
+        assertTrue("lld1 should be empty upon initialization", lld1.isEmpty());
 
-		lld1.addFirst(10);
-		// should not be empty
-		assertFalse("lld1 should contain 1 item", lld1.isEmpty());
+        lld1.addFirst(10);
+        // should not be empty
+        assertFalse("lld1 should contain 1 item", lld1.isEmpty());
 
-		lld1.removeFirst();
-		// should be empty
-		assertTrue("lld1 should be empty after removal", lld1.isEmpty());
+        lld1.removeFirst();
+        // should be empty
+        assertTrue("lld1 should be empty after removal", lld1.isEmpty());
     }
 
     @Test
@@ -102,8 +102,10 @@ public class ArrayDequeTest {
 
         boolean passed1 = false;
         boolean passed2 = false;
-        assertNull("Should return null when removeFirst is called on an empty Deque,", lld1.removeFirst());
-        assertNull("Should return null when removeLast is called on an empty Deque,", lld1.removeLast());
+        assertNull("Should return null when removeFirst is called on an empty Deque,",
+                lld1.removeFirst());
+        assertNull("Should return null when removeLast is called on an empty Deque,",
+                lld1.removeLast());
 
     }
 
@@ -186,15 +188,15 @@ public class ArrayDequeTest {
         lld1.removeFirst();
         lld1.addFirst(2);
         lld1.addFirst(1);
-        assertEquals((int) lld1.removeFirst() , 1);
-        assertEquals((int) lld1.removeFirst() , 2);
-        assertEquals((int) lld1.removeFirst() , 3);
-        assertEquals((int) lld1.removeFirst() , 4);
-        //assertEquals((int) lld1.removeFirst() , 5);
-        assertEquals((int) lld1.removeLast() , 4);
-        assertEquals((int) lld1.removeLast() , 3);
-        assertEquals((int) lld1.removeLast() , 2);
-        assertEquals((int) lld1.removeLast() , 1);
+        assertEquals((int) lld1.removeFirst(), 1);
+        assertEquals((int) lld1.removeFirst(), 2);
+        assertEquals((int) lld1.removeFirst(), 3);
+        assertEquals((int) lld1.removeFirst(), 4);
+        //assertEquals((int) lld1.removeFirst(), 5);
+        assertEquals((int) lld1.removeLast(), 4);
+        assertEquals((int) lld1.removeLast(), 3);
+        assertEquals((int) lld1.removeLast(), 2);
+        assertEquals((int) lld1.removeLast(), 1);
 
     }
 
@@ -214,16 +216,16 @@ public class ArrayDequeTest {
                 //System.out.println("addLast(" + randVal + ")");
             } else if (operationNumber == 1) {
                 // size
-                int Lsize = L.size();
-                int Bsize = B.size();
-                assertEquals(Lsize, Bsize);
+                int lSize = L.size();
+                int bSize = B.size();
+                assertEquals(lSize, bSize);
                 //System.out.println("size: " + size);
             } else if (operationNumber == 2) {
                 if (L.size() > 0 && B.size() > 0) {
                     int num = StdRandom.uniform(0, L.size());
-                    int Llast = L.get(num);
-                    int Blast = B.get(num);
-                    assertEquals(Llast, Blast);
+                    int lLast = L.get(num);
+                    int bLast = B.get(num);
+                    assertEquals(lLast, bLast);
                     //System.out.println("removelast(" + last + ")");
                 }
             } else if (operationNumber == 3) {
@@ -237,7 +239,7 @@ public class ArrayDequeTest {
     }
 
     @Test
-    public void IteratorTest() {
+    public void iteratorTest() {
         ArrayDeque<Integer> lld1 = new ArrayDeque<>();
         lld1.addLast(1);
         lld1.addLast(2);

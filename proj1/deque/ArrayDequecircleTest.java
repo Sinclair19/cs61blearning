@@ -202,7 +202,7 @@ public class ArrayDequecircleTest {
 
     @Test
     public void randomizedTest() {
-        ArrayDeque<Integer> L = new ArrayDeque<>();
+        LinkedListDeque<Integer> L = new LinkedListDeque<>();
         ArrayDequecircle<Integer> B = new ArrayDequecircle<>();
 
         int N = 10000;
@@ -306,5 +306,20 @@ public class ArrayDequecircleTest {
         third.addLast(5);
         assertFalse(first.equals(third));
 
+    }
+
+    @Test
+    public void removeBackTest() {
+        ArrayDequecircle<Integer> first = new ArrayDequecircle<>();
+        first.addFirst(0);
+        assertEquals(0, (int) first.removeLast());
+        first.addFirst(2);
+        first.addFirst(3);
+        first.isEmpty();
+        first.addFirst(5);
+        first.addFirst(6);
+        first.addFirst(7);
+        assertEquals(2, (int) first.removeLast());
+        assertEquals(3, (int) first.removeLast());
     }
 }
