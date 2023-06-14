@@ -632,3 +632,34 @@ A couple of rules to adhere to while implementing your `.equals()` method are as
 2. It must take an Object argument, in order to override the original .equals() method
 3. It must be consistent if x.equals(y), then as long as x and y remain unchanged: x must continue to equal y
 4. It is never true for null x.equals(null) must be false
+
+# extra
+## Command Line Compilation
+
+`public static void main(string[] args)`
+
+args can be used as a list, like `args[0]` for the first arg
+
+## Git
+coverd these part:  
+- Maps
+- Hashing
+- File I/O
+- Graphs
+
+Would need roughly 2^80 files before we expect to see two files with the same SHA hash  
+
+Every commit in git stores (at least):
+- An author.
+- A date.
+- A commit message.
+- A list of all files and their versions.
+  - Versions are git-SHA1 hashes.
+- The parent’s commit ID.
+  - Example: aa45f...db’s parent ID is d1bd...61.
+
+### store file
+Java has a built-in feature called Serializable that lets you store arbitrary objects.  
+Easy to use: Just make your class implement Serializable.  
+There are no methods to implement (weird).  
+Then use our Utils class to write/read objects to/from files.  
