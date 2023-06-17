@@ -663,3 +663,74 @@ Java has a built-in feature called Serializable that lets you store arbitrary ob
 Easy to use: Just make your class implement Serializable.  
 There are no methods to implement (weird).  
 Then use our Utils class to write/read objects to/from files.  
+
+# 8 Efficient Programming
+
+## 8.1 Encapsulation， API's, ADT's
+
+### Encapsulation
+- Module: A set of methods that work together as a whole to perform some task or set of related tasks.
+- Encapsulated: A module is said to be encapsulated if its implementation is completely hidden, and it can be accessed only through a documented interface.
+
+### API's
+An API(Application Programming Interface) of an ADT is the list of constructors and methods and a short description of each.  
+
+API consists of syntactic and semantic specification.
+
+### ADT's
+ADT's (Abstract Data Structures) are high-level types that are defined by their behaviors, not their implementations.  
+
+
+## 8.2 Asymptotics I
+
+### Example of Algorithm Cost
+Objective: Determine if a sorted array contains any duplicates.
+
+- Silly Algorithm: Consider every pair, returning true if any match!  
+
+- Better Algorithm: Take advantage of the sorted nature of our array.  
+
+### Techniques for Measuring Computational Cost
+- Technique 1: Measure execution time in seconds using a client program (i.e. actually seeing how quick our program runs in physical seconds)
+- Technique 2
+  - Procedure
+    - Look at your code and the various operations that it uses (i.e. assignments, incrementations, etc.)  
+    - Count the number of times each operation is performed.  
+  - Observations
+    - Some counts get tricky to count.
+    - How did we get some of these numbers? It can be complicated and tedious.
+  - Pros vs. Cons
+    - Pros: Machine independent (for the most part). Input dependence captured in model.
+    - Cons: Tedious to compute. Array size was arbitrary
+
+### Asymptotic Behavior
+In most cases, we only care about what happens for very large N (asymptotic behavior).  
+
+### Simplification Summary
+- Only consider the worst case.
+- Pick a representative operation (aka: cost model)
+- Ignore lower order terms
+- Ignore multiplicative constants.
+
+### Big-Theta
+$$R(N) \in \Theta(f(N)) $$  
+means that there exists positive constants $k_1$, $k_2$ such that:
+$$k_1 \cdot f(N) <= R(N) <= k_2 \cdot f(N)$$  
+
+### Big O
+Similarly, here's the formal definition of Big O:  
+$$R(N) \in O(f(N))$$ 
+means that there exists positive constants $k_2$ such that: $R(N)≤k_​2 \cdot f(N)$ for all values of N greater than some $N_0$ (a very large N).  
+Observe that this is a looser condition than Big Theta since Big O does not care about the lower bound.
+
+Summary
+- Given a piece of code, we can express its runtime as a function R(N)
+  - N is some property of the input of the function
+  - i.e. oftentimes, N represents the size of the input
+- Rather than finding R(N) exactly, we instead usually only care about the order of growth of R(N).
+- One approach (not universal):
+  - Choose a representative operation
+  - Let $C(N) = count$ of how many times that operation occurs, as a function of $N$.
+  - Determine order of growth $f(N)$ for $C(N)$, i.e. $C(N)∈Θ(f(N))$
+  - Often (but not always) we consider the worst case count.
+  - If operation takes constant time, then $R(N)∈Θ(f(N))$
