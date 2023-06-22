@@ -734,3 +734,59 @@ Summary
   - Determine order of growth $f(N)$ for $C(N)$, i.e. $C(N)∈Θ(f(N))$
   - Often (but not always) we consider the worst case count.
   - If operation takes constant time, then $R(N)∈Θ(f(N))$
+
+# 9 Disjoint Sets
+## 9.1 Introduction
+Two sets are named disjoint sets if they have no elements in common.  
+A Disjoint-Sets (or Union-Find) data structure keeps track of a fixed number of elements partitioned into a number of disjoint sets.  
+
+The data structure has two operations:  
+- `connect(x, y)`: connect x and y. Also known as union
+- `isConnected(x, y)`: returns true if x and y are connected (i.e. part of the same set).
+
+## 9.2 Quick Find
+- ListOfSets
+`List<Set<Integer>>`
+
+- Quick Find
+- The indices of the array represent the elements of our set.
+- The value at an index is the set number it belongs to.
+
+## 9.3 Quick Union
+Instead of an id, we assign each item the index of its parent.  
+If an item has no parent, then it is a 'root' and we assign it a negative value.
+For QuickUnion we define a helper function find(int item) which returns the root of the tree item is in.  
+
+### Performance
+There is a potential performance issue with QuickUnion: the tree can become very long.  
+In this case, finding the root of an item (find(item)) becomes very expensive. 
+
+## 9.4 Weighted Quick Union(WQU)
+whenever we call connect, we always link the root of the smaller tree to the larger tree.  
+
+### Maximum height: Log N
+By extension, the runtimes of connect and isConnected are bounded by O(log N).  
+
+
+## 9.5 Weighted Quick Union with Path Compression
+The clever insight is realizing that whenever we call find(x) we have to traverse the path from x to root.   So, along the way we can connect all the items we visit to their root at no extra asymptotic cost.  
+Connecting all the items along the way to the root will help make our tree shorter with each call to find.  
+
+By extension, the average runtime of connect and isConnected becomes almost constant in the long term! This is called the amortized runtime. 
+
+
+## Summary
+- Represent sets as connected components (don't track individual connections).
+ - ListOfSetsDS: Store connected components as a List of Sets (slow, complicated).
+ - QuickFindDS: Store connected components as set ids.
+ - QuickUnionDS: Store connected components as parent ids.
+ - WeightedQuickUnionDS: Also track the size of each set, and use size to decide on new tree root.
+ - WeightedQuickUnionWithPathCompressionDS: On calls to connect and isConnected, set parent id to the root for all items seen.
+
+|Implementation|Constructor|connect|isConnected|
+|----|----|----|----|
+|ListOfSets|Θ(N)1|O(N)|O(N)|
+|QuickFind|Θ(N)|Θ(N)|Θ(1)|
+|QuickUnion|Θ(N)|O(N)|O(N)|
+|Weighted Quick Union|Θ(N)|O(log N)|O(log N)|
+|WQU with Path Compression||O(α(N))*|O(α(N))*|
