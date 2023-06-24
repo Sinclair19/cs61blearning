@@ -735,6 +735,56 @@ Summary
   - Often (but not always) we consider the worst case count.
   - If operation takes constant time, then $R(N)∈Θ(f(N))$
 
+## 8.3 Asymptotics II
+
+### There is no magic shortcut
+Techniques:
+- Find exact sum
+- Write out examples
+- Draw pictures
+
+Sum Things to Know Here are two important sums you'll see quite often, and should remember:  
+
+$$1+2+3+...+Q=\frac{Q(Q+1)}{2} =Θ(Q^​2)$$ (Sum of First Natural Numbers)  
+$$1+2+4+8+...+Q=2Q−1=Θ(Q)$$(Sum of First Powers of 2)  
+
+### Binary Search
+Binary search is a nice way of searching a list for a particular item.  
+It requires the list to be in sorted order, and uses that fact to find an element quickly. 
+
+We start with n options, then n/2, then n/4 ... until we have just 1.  
+Each time, we cut the array in half, so in the end we must perform a total of $log2(n)$ operations. 
+Each of the $log2(n)$ operations
+
+A couple properties worth knowing (see below for proofs)  
+
+- $⌊f(N)⌋=Θ(f(N))$
+- $⌈f(N)⌉=Θ(f(N))$
+- $logp(N)=Θ(logq(N))$
+- $Θ(⌊log2(N)⌋)=Θ(logN)$
+
+Log time is super good! It's almost as fast as constant time, and way better than linear time.  
+
+
+### Merge Sort
+Selection sort works off two basic steps:  
+- Find the smallest item among the unsorted items, move it to the front, and ‘fix’ it in place.
+- Sort the remaining unsorted/unfixed items using selection sort.
+
+If we analyze selection sort, we see that it's $Θ(N^2)$.  
+
+Say we have two sorted arrays that we want to combine into a single big sorted array.  
+We could append one to the other, and then re-sort it, but that doesn't make use of the fact that each individual array is already sorted.   
+
+This is the essence of merge sort:  
+- If the list is size 1, return. Otherwise:
+- Mergesort the left half 
+- Mergesort the right half
+- Merge the results
+
+Mergesort has worst case runtime $Θ(NlogN)$. 
+
+
 # 9 Disjoint Sets
 ## 9.1 Introduction
 Two sets are named disjoint sets if they have no elements in common.  
