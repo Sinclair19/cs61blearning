@@ -840,3 +840,112 @@ By extension, the average runtime of connect and isConnected becomes almost cons
 |QuickUnion|Θ(N)|O(N)|O(N)|
 |Weighted Quick Union|Θ(N)|O(log N)|O(log N)|
 |WQU with Path Compression||O(α(N))*|O(α(N))*|
+
+# 10 ADTs
+
+## 10.1 Intro to ADTs
+An Abstract Data Type (ADT) is defined only by its operations, not by its implementation. 
+
+Some commonly used Collections ADT's are:  
+
+- Stacks: Structures that support last-in first-out retrieval of elements
+  - `push(int x)`: puts x on the top of the stack
+  - `int pop()`: takes the element on the top of the stack
+- Lists: an ordered set of elements
+  - `add(int i)`: adds ands an element
+  - `int get(int i)`: gets element at index i
+- Sets: an unordered set of unique elements (no repeats)
+  - `add(int i)`: adds an element
+  - `contains(int i)`: returns a boolean for whether or not the set contains the value
+- Maps: set of key/value pairs
+  - `put(K key, V value)`: puts a key value pair into the map
+  - `V get(K key)`: gets the value corresponding to the key
+
+## 10.2 Trees
+
+### Binary Search Trees
+
+### Properties of trees
+Trees are composed of:  
+- nodes
+- edges that connect those nodes.
+  - Constraint: there is only one path between any two nodes.
+
+```java
+private class BST<Key> {
+    private Key key;
+    private BST left;
+    private BST right;
+
+    public BST(Key key, BST left, BST Right) {
+        this.key = key;
+        this.left = left;
+        this.right = right;
+    }
+
+    public BST(Key key) {
+        this.key = key;
+    }
+}
+```
+
+### Binary Search Tree Operations
+
+#### Search
+We know that the BST is structured such that all elements to the right of a node are greater and all elements to the left are smaller.   
+Knowing this, we can start at the root node and compare it with the element, X, that we are looking for.  
+If X is greater to the root, we move on to the root's right child.  
+If its smaller, we move on to the root's left child.  
+We repeat this process recursively until we either find the item or we get to a leaf in which case the tree does not contain the item.
+
+#### Insert
+First, we search in the tree for the node.   
+If we find it, then we don't do anything.   
+If we don't find it, we will be at a leaf node already.  
+At this point, we can just add the new element to either the left or right of the leaf, preserving the BST property.  
+
+#### Delete
+Deleting from a binary tree is a little bit more complicated because whenever we delete, we need to make sure we reconstruct the tree and still maintain its BST property.  
+
+- Let's break this problem down into three categories:  
+  - the node we are trying to delete has no children
+  - has 1 child
+  - has 2 children
+
+- No children
+If the node has no children, it is a leaf, and we can just delete its parent pointer and the node will eventually be swept away by the garbage collector.
+
+- One child
+If the node only has one child, we know that the child maintains the BST property with the parent of the node because the property is recursive to the right and left subtrees.  
+Therefore, we can just reassign the parent's child pointer to the node's child and the node will eventually be garbage collected.  
+
+- Two children
+If the node has two children, the process becomes a little more complicated because we can't just assign one of the children to be the new root.  
+This might break the BST property.  
+Instead, we choose a new node to replace the deleted one.  
+
+We know that the new node must:  
+  - be > than everything in left subtree.
+  - be < than everything right subtree.
+In the below tree, we show which nodes would satisfy these requirements given that we are trying to delete the dog node.  
+
+This is called Hibbard deletion, and it gloriously maintains the BST property amidst a deletion.  
+
+### BSTs as Sets and Maps
+We can also make a binary tree into a map by having each BST node hold (key,value) pairs instead of singular values. 
+
+### Summary
+Abstract data types (ADTs) are defined in terms of operations, not implementation.  
+
+- Several useful ADTs:
+  - Disjoint Sets, Map, Set, List.
+  - Java provides Map, Set, List interfaces, along with several implementations.
+
+We’ve seen two ways to implement a Set (or Map):
+
+ArraySet: $Θ(N)$ operations in the worst case.
+BST: $Θ(logN)$ operations if tree is balanced.
+
+BST Implementations:
+- Search and insert are straightforward (but insert is a little tricky).
+- Deletion is more challenging. Typical approach is “Hibbard deletion”.  
