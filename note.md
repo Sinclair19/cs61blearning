@@ -949,3 +949,75 @@ BST: $Θ(logN)$ operations if tree is balanced.
 BST Implementations:
 - Search and insert are straightforward (but insert is a little tricky).
 - Deletion is more challenging. Typical approach is “Hibbard deletion”.  
+
+# 11 Balanced Trees
+
+## 11.1 Intro to B-Trees
+
+### Binary Tree Height
+- Worst case: $Θ(N)$
+- Best case: $Θ(logN)$
+
+The runtimes are dependent on the structure of the tree.  
+If the tree is really spindly, then its basically a linked list and the runtime is linear.  
+If the tree is bushy, then the height of the tree is 
+$logN$ and therefore the runtime grows in $logN$ time
+
+### A short detour into BigO and worst case
+
+BigO is not equivalent to worst case!  
+Remember, BigO is an upper bound.  
+As long as a function falls within that bound, it is considered to be inside the BigO of that function.   Worst-case is more restrictive than BigO.  
+
+### BST Performance
+Some terminology for BST performance:
+- depth: the number of links between a node and the root.
+- height: the lowest depth of a tree.
+- average depth: average of the total depths in the tree.  You calculate this by taking $\frac{{\textstyle \sum_{i=0}^{D}}d_in_i}{N}$ where $d_i$ is depth and $n_i$ is number of nodes at that depth.
+
+### BST insertion order
+when we insert randomly into a BST the average depth and height are expected to be $Θ(logN)$.  
+
+## 11.2 B-Trees
+The problem with BST's is that we always insert at a leaf node.  
+This is what causes the height to increase. Take this nice balanced tree below:  
+When we start inserting nodes, we could potentially break the balanced structure.  
+
+Set a limit on the number of elements in a single node. 
+When it reach the limit, split the node in half, by bumping up the middle left node.  
+
+By splitting nodes in the middle, we maintain perfect balance. 
+These trees are called B-trees or **2-3-4/2-3 Trees**(limit = 3).   
+2-3-4 and 2-3 refer to the number of children each node can have. 
+
+### Insertion Process
+The process of adding a node to a 2-3-4 tree is:  
+- We still always inserting into a leaf node, so take the node you want to insert and traverse down the tree with it, going left and right according to whether or not the node to be inserted is greater than or smaller than the items in each node.
+- After adding the node to the leaf node, if the new node has 4 nodes, then pop up the middle left node and re-arrange the children accordingly.
+- If this results in the parent node having 4 nodes, then pop up the middle left node again, rearranging the children accordingly.
+- Repeat this process until the parent node can accommodate or you get to the root.  
+
+## 11.3 B-Tree invariants and runtime
+
+### B-Tree invariants
+A B-tree has the following helpful invariants:
+- All leaves must be the same distance from the source.
+- A non-leaf node with $k$ items must have exactly $k+1$ children.
+- In tandem, these invariants cause the tree to always be bushy. 
+
+### B-Tree runtime analysis
+The worst-case runtime situation for search in a B-tree would be if each node had the maximum number of elements in it and we had to traverse all the way to the bottom. 
+
+### Summary
+BSTs have best case height $Θ(logN)$, and worst case height $Θ(N)$.  
+- Big O is not the same thing as worst case!  
+
+B-Trees are a modification of the binary search tree that avoids $Θ(N)$ worst case.  
+- Nodes may contain between $1$ and $L$ items.
+- contains works almost exactly like a normal BST.
+- add works by adding items to existing leaf nodes.
+- If nodes are too full, they split.
+- Resulting tree has perfect balance. Runtime for operations is $O(logN)$.
+- Have not discussed deletion. See extra slides if you’re curious.
+- Have not discussed how splitting works if $L>3$ (see some other class).
+- B-trees are more complex, but they can efficiently handle ANY insertion order.
