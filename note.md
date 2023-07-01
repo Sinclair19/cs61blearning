@@ -1021,3 +1021,96 @@ B-Trees are a modification of the binary search tree that avoids $Θ(N)$ worst c
 - Have not discussed deletion. See extra slides if you’re curious.
 - Have not discussed how splitting works if $L>3$ (see some other class).
 - B-trees are more complex, but they can efficiently handle ANY insertion order.
+
+## 11.4 Rotating Trees
+
+### BST structure
+However, insertion is not the only way to yield different structures for the same BST. One thing we can do is change the tree with the nodes already in place through a process called rotating.  
+
+### Tree Rotation
+The formal definition of roatation is:  
+- `rotateLeft(G)`: Let x be the right child of G. Make G the new left child of x.
+- `rotateRight(G)`: Let x be the left child of G. Make G the new right child of x.
+
+```java
+private Node rotateRight(Node h) {
+    // assert (h != null) && isRed(h.left);
+    Node x = h.left;
+    h.left = x.right;
+    x.right = h;
+    return x;
+}
+
+// make a right-leaning link lean to the left
+private Node rotateLeft(Node h) {
+    // assert (h != null) && isRed(h.right);
+    Node x = h.right;
+    h.right = x.left;
+    x.left = h;
+    return x;
+}
+```
+
+## 11.5 Red-Black Trees
+We choose arbitrarily to make the left element a child of the right one. This results in a left-leaning tree.    
+We show that a link is a glue link by making it red.  
+Normal links are black. Because of this, we call these structures left-leaning red-black trees (LLRB).  
+
+Left-Leaning Red-Black trees have a 1-1 correspondence with 2-3 trees.  
+Every 2-3 tree has a unique LLRB red-black tree associated with it.  
+As for 2-3-4 trees, they maintain correspondence with standard Red-Black trees.  
+
+### Properties of LLRB's
+- 1-1 correspondence with 2-3 trees.
+- No node has 2 red links.
+- There are no red right-links.
+- Every path from root to leaf has same number of black links (because 2-3 trees have same number of links to every leaf).
+- Height is no more than 2x height of corresponding 2-3 tree.
+
+### Inserting into LLRB
+
+- Task 1: insertion color: because in a 2-3 tree, we are always inserting by adding to a leaf node, the color of the link we add should always be red.
+- Task 2: insertion on the right: recall, we are using left-leaning red black trees, which means we can never have a right red link. If we insert on the right, we will need to use a rotation in order to maintain the LLRB invariant.
+  However, if we were to insert on the right with a red link and the left child is also a red link, then we will temporarily allow it for purposes that will become clearer in task 3.
+- Task 3: double insertion on the left: If there are 2 left red links, then we have a 4-node which is illegal. First, we will rotate to create the same tree seen in task 2 above. Then, in both situations, we will flip the colors of all edges touching S. This is equivalent to pushing up the middle node in a 2-3 tree.
+
+#### summary of all the operations:
+
+- When inserting: Use a red link.
+- If there is aright leaning “3-node”, we have a Left Leaning Violation
+  - Rotate left the appropriate node to fix.
+- If there are two consecutive left links, we have an incorrect 4 Node Violation!
+  - Rotate right the appropriate node to fix.
+- If there are any nodes with two red children, we have a temporary 4 Node.
+  - Color flip the node to emulate the split operation.
+
+### Runtime
+Because a left-leaning red-black tree has a 1-1 correspondence with a 2-3 tree and will always remain within 2x the height of its 2-3 tree, the runtimes of the operations will take $logN$ time.  
+
+### abstracted code for insertion into LLRB:
+```java
+private Node put(Node h, Key key, Value val) {
+    if (h == null) { return new Node(key, val, RED); }
+
+    int cmp = key.compareTo(h.key);
+    if (cmp < 0)      { h.left  = put(h.left,  key, val); }
+    else if (cmp > 0) { h.right = put(h.right, key, val); }
+    else              { h.val   = val;                    }
+
+    if (isRed(h.right) && !isRed(h.left))      { h = rotateLeft(h);  }
+    if (isRed(h.left)  &&  isRed(h.left.left)) { h = rotateRight(h); }
+    if (isRed(h.left)  &&  isRed(h.right))     { flipColors(h);      } 
+
+    return h;
+}
+```
+
+### Summary
+- Binary search trees are simple, but they are subject to imbalance which leads to crappy runtime.
+- 2-3 Trees (B Trees) are balanced, but painful to implement and relatively slow.
+- LLRBs insertion is simple to implement (but deletion is hard).
+- Works by maintaining mathematical bijection with a 2-3 trees.
+- Java’s TreeMap is a red-black tree (but not left leaning).
+- LLRBs maintain correspondence with 2-3 tree, Standard Red-Black trees maintain correspondence with 2-3-4 trees.
+- Allows glue links on either side (see Red-Black Tree).
+- More complex implementation, but significantly faster.
