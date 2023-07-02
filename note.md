@@ -745,8 +745,10 @@ Techniques:
 
 Sum Things to Know Here are two important sums you'll see quite often, and should remember:  
 
-$$1+2+3+...+Q=\frac{Q(Q+1)}{2} =Θ(Q^​2)$$ (Sum of First Natural Numbers)  
-$$1+2+4+8+...+Q=2Q−1=Θ(Q)$$(Sum of First Powers of 2)  
+$$1+2+3+...+Q=\frac{Q(Q+1)}{2} =Θ(Q^​2)$$ 
+(Sum of First Natural Numbers)  
+$$1+2+4+8+...+Q=2Q−1=Θ(Q)$$ 
+(Sum of First Powers of 2)  
 
 ### Binary Search
 Binary search is a nice way of searching a list for a particular item.  
@@ -1114,3 +1116,129 @@ private Node put(Node h, Key key, Value val) {
 - LLRBs maintain correspondence with 2-3 tree, Standard Red-Black trees maintain correspondence with 2-3-4 trees.
 - Allows glue links on either side (see Red-Black Tree).
 - More complex implementation, but significantly faster.
+
+# 12 Hashing
+
+## 12.1 A first attempt
+
+### Issues with what we've seen so far
+- They require that iitmes be comparable
+- They give a complexitiy of $\Theta(logN)$
+
+### A first attempt: `DataIndexedIntegerSet`
+create an ArrayList of type boolean and size 2 billion.  
+Leteverything be false by default.  
+
+- The `add(int x)` method simply sets the x position in our ArrayList to true. This takes $\Theta(1)$ time.
+- The `contains(int x)` method simply returns whether the x position in our ArrayList is true or false. This also takes $\Theta(1)$time!
+
+#### **issues** with this approach
+- Extremely wasteful. If we assume that a boolean takes 1 byte to store, the above needs 2GB of space per new DataIndexedIntegerSet(). Moreover, the user may only insert a handful of items...
+- What do we do if someone wants to insert a String?
+  - Let's look at this next. Of course, we may want to insert other things
+
+## 12.2 Inserting words
+
+### Strategy: Avoiding collisions
+give each one a number: 
+$a=1,b=2,…,z=26$. Now, we can write any unique lowercase string in base 26. 
+
+This representation gives a unique integer to every english word containing lowercase letters, much like using base 10 gives a unique representation to every number.   
+We are guaranteed to not have collisions.  
+
+## 12.3 Inserting Strings and Overflow
+
+### Handling Integer Overflow and Hash Codes
+
+### Overflow issues
+The largest possible value for integers in Java is 2,147,483,647. The smallest value is -2,147,483,648.  
+
+If you try to take the largest value and add 1, you get the smallest value!  
+
+### Hash Codes
+In computer science, taking an object and converting it into some integer is called "computing the hash code of the object"  
+
+- Every Object in Java has a default `.hashcode()` method, which we can use. Java computes this by figuring out where the Object sits in memory (every section of the memory in your computer has an address!), and uses that memory's address to do something similar to what we did with Strings. This methods gives a unique hashcode for every single Java object.
+- Sometimes, we write our own hashcode method. For example, given a Dog, we may use a combination of its name, age and breed to generate a hashcode.
+
+### Properties of HashCodes
+Hash codes have three necessary properties, which means a hash code must have these properties in order to be valid:
+1. It must be an Integer
+2. If we run `.hashCode()` on an object twice, it should return the **same** number
+3. Two objects that are considered `.equal()` must have the same hash code.
+
+Not all hash codes are created equal, however. If you want your hash code to be considered a good hash code, it should:
+- Distribute items evenly
+
+**Note that at this point, we know how to add arbitrary objects to our data structure, not only strings.**  
+
+## 12.4 Handling Collisions
+
+### Handling Collisions
+Everything in the array is originally empty.  
+If we get a new item, and its hashcode is \$h\$:
+
+- If there is nothing at index \$h\$ at the moment, we'll create a new `LinkedList` for index \$h\$, place it there, and then add the new item to the newly created LinkedList.
+- If there is already something at index \$h\$, then there is already a `LinkedList` there. We simply add our new item to that `LinkedList`. 
+
+  Note: Our data structure is not allowed to have any duplicate items / keys.  
+  Therefore, we must first check whether the item we are trying to insert is already in this `LinkedList`.  
+  If it is, we do nothing!  
+  This also means that we will insert to the END of the linked list, since we need to check all of the elements anyways.
+
+### Concrete workflow
+- `add` item
+  - Get hashcode (i.e., index) of item.
+  - If index has no item, create new List, and place item there.
+  - If index has a List already, check the List to see if item is already in there. If not, add item to List.
+- `contains` item
+  - Get hashcode (i.e., index) of item.
+  - If index is empty, return false.
+  - Otherwise, check all items in the List at that index, and if the item exists, return true.
+
+### Runtime Complexity
+- **Why is contains $Θ(Q)$?**
+  Because we need to look at all the items in the LinkedList at the hashcode (i.e., index).
+
+- **Why is add $Θ(Q)$?**
+  Can't we just add to the beginning of the LinkedList, which takes $Θ(1)$ time? No! Because we have to check to make sure the item isn't already in the linked list.
+
+
+## 12.5 Hash Table and Fixing Runtime
+
+### Our Final Data Structure: HashTable
+What we've created now is called a `HashTable`.
+
+- Inputs are converted by a hash function (`hashcode`) into an integer. Then, they're converted to a valid index using the modulus operator. Then, they're added at that index (dealing with collisions using LinkedLists).
+- `contains` works in a similar fashion by figuring out the valid index, and looking in the corresponding LinkedList for the item
+
+### Dynamically growing the hash table
+
+Suppose we have $M$ buckets (indices) and $N$ items. We say that our **load factor** is $N/M$.  
+
+(Note that the load factor is equivalent to our best case runtime from above.)
+
+And note that if we keep M (the number of buckets) fixed, and N keeps increasing, the load factor consistently keeps increasing.  
+
+- Create a new HashTable with 2M buckets.
+- Iterate through all the items in the old HashTable, and one by one, add them into this new HashTable.
+  - We need to add elements one by one again because since the size of the array changes, the modulus also changes, therefore the item probably belongs in a different bucket in the new hashtable than in the old one.
+
+**Note that resizing the hash table also helps with shuffling the items in the hashtable!**
+
+At this point, assuming items are evenly distributed, all the lists will be approximately $N/M$ items long, resulting in $Θ(N/M)$ runtime. Remember that $N/M$ is only allowed to be under a constant load factor threshold, and so, $Θ(N/M)=Θ(1)$.
+
+Note also that resizing takes $Θ(N)$ time. And each add takes $Θ(1)$ time.  
+
+### Assuming that items are evenly distributed
+Items will distribute evenly if we have good hash codes (i.e. hashcodes which give fairly random values for different items.)  
+
+
+Some general good rules of thumb:
+
+- Use a 'base' strategy similar to the one we developed earlier.
+- Use a 'base' that's a small prime.
+  - Base 126 isn't actually very good, because using base 126 means that any string that ends in the same last 32 characters has the same hashcode.
+  - This happens because of overflow.
+  - Using prime numbers helps avoid overflow issues (i.e., collisions due to overflow).
+  - Why a small prime? Because it's easier to compute.
