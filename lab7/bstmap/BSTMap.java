@@ -71,14 +71,14 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     }
 
     private BSTNode leftMax(BSTNode node) {
-        if (node.right == null) {
+        if (node == null || node.right == null) {
             return node;
         }
         return leftMax(node.right);
     }
 
     private BSTNode rightMin(BSTNode node) {
-        if (node.left == null) {
+        if (node == null || node.left == null) {
             return node;
         }
         return rightMin(node.left);
@@ -209,12 +209,19 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
 
     private void setLinkToNull(BSTNode node) {
         if (node.parent != null) {
-            if (node.parent.left != null && node.parent.left.key.equals(node.key)) {
-                node.parent.left = null;
+            if (node.isLeaf()) {
+                if (node.parent.left != null && node.parent.left.key.equals(node.key)) {
+                    node.parent.left = null;
+                }
+                else {
+                    node.parent.right = null;
+                }
             }
             else {
-                node.parent.right = null;
+                node.parent.left = node.left;
+                node.left.parent = node.parent;
             }
+
         }
     }
 
@@ -233,9 +240,9 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
                 root = null;
             }
         } else if (pNode == null || pNode.twoChild()) { // cNode is root or has two children
-            BSTNode sNode = leftMax(cNode);
+            BSTNode sNode = leftMax(cNode.left);
             if (sNode == null || sNode == cNode) {
-                sNode = rightMin(cNode);
+                sNode = rightMin(cNode.right);
             }
             setLinkToNull(sNode);
             cNode.key = sNode.key;
