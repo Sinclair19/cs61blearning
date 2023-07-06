@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.Stack;
 
-public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
+public class BSTMapunfinished<K extends Comparable<K>, V> implements Map61B<K, V> {
     private int size;
 
     private BSTNode root;
@@ -16,14 +16,11 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         public BSTNode left;
         public BSTNode right;
 
-        public BSTNode parent;
-
-        public BSTNode(K key, V value, BSTNode left, BSTNode right, BSTNode parent) {
+        public BSTNode(K key, V value, BSTNode left, BSTNode right) {
             this.key = key;
             this.value = value;
             this.left = left;
             this.right = right;
-            this.parent = parent;
         }
 
         //create leaf node
@@ -57,15 +54,18 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
      * when this node exist, return this node
      * if it doesn't exist, return the previous node
      */
-    private BSTNode findPlace(BSTNode cNode, BSTNode pNode, K key) {
+    private BSTNode findPlace(BSTNode cNode, BSTNode pNode, K key, boolean returnParent) {
         if (cNode == null) {
             return pNode; //return previous node
         }
         if (key.compareTo(cNode.key) < 0) {
-            return findPlace(cNode.left, cNode, key);
+            return findPlace(cNode.left, cNode, key, returnParent);
         }
         if (key.compareTo(cNode.key) > 0) {
-            return findPlace(cNode.right, cNode, key);
+            return findPlace(cNode.right, cNode, key, returnParent);
+        }
+        if (returnParent) {
+            return pNode;
         }
         return cNode; //return current node
     }
@@ -94,29 +94,35 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         return "right";
     }
 
-    private BSTNode findChild(BSTNode pNode) {
+    private BSTNode findChild(BSTNode pNode, String direction) {
         if (pNode == null) {
             return root;
         }
-        return pNode.left != null ? pNode.left : pNode.right;
+        if (direction == null) {
+            return (pNode.left != null) ? pNode.left : pNode.right;
+        }
+        if (direction.equals("left")) {
+            return pNode.left;
+        }
+        return pNode.right;
     }
 
-    private BSTNode findNode(K key) {
-        return findPlace(root, null, key);
+    private BSTNode findNode(K key, Boolean returnParent) {
+        return findPlace(root, null, key, returnParent);
     }
 
     public boolean containsKey(K key) {
         if (root == null) {
             return false;
         }
-        return findNode(key).key.equals(key);
+        return findNode(key, false).key.equals(key);
     }
 
     public V get(K key) {
         if (root == null) {
             return null;
         }
-        BSTNode tempNode = findNode(key);
+        BSTNode tempNode = findNode(key, false);
         if (tempNode.key.equals(key)) {
             return tempNode.value;
         }
@@ -135,19 +141,18 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
             size += 1;
             return;
         }
-        BSTNode find = findNode(key);
+        BSTNode find = findNode(key, false);
         if (find.key == key) {
             find.value = value;
         }
         else {
-            if (key.compareTo(find.key) < 0) {
-                find.left = temp;
-            }
-            else {
-                find.right = temp;
-            }
-            temp.parent = find;
-            size += 1;
+           if (key.compareTo(find.key) <= 0) {
+               find.left = temp;
+           }
+           else {
+               find.right = temp;
+           }
+           size += 1;
         }
     }
 
@@ -207,69 +212,47 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         return keySet;
     }
 
-    private void setLinkToNull(BSTNode node) {
-        if (node.parent != null) {
-            if (node.parent.left != null && node.parent.left.key.equals(node.key)) {
-                node.parent.left = null;
+    private void remove(BSTNode cNode, BSTNode pNode, String direction) {
+        if (pNode == null || pNode.twoChild()) { // cNode is root or has two children
+            BSTNode sNode = leftMax(cNode);
+            root = new BSTNode(sNode.key, sNode.value, cNode.left, cNode.right);
+            sNode = null;
+        }
+        if (cNode.isLeaf()) { //child node is leaf
+            if (direction.equals("left")) {
+                pNode.left = null;
             }
             else {
-                node.parent.right = null;
+                pNode.right = null;
+            }
+        }
+        if (cNode.oneChild()) { //child node has one child
+            BSTNode ccNode = findChild(cNode, null); // find child node of cNode
+            if (direction.equals("left")) {
+                pNode.left = ccNode;
+            }
+            else {
+                pNode.right = ccNode;
             }
         }
     }
 
-    private void remove(BSTNode cNode) {
-        BSTNode pNode = cNode.parent;
-        if (cNode.isLeaf()) { //child node is leaf
-            if (cNode.parent != null) {
-                if (cNode.parent.left != null && cNode.parent.left.key.equals(cNode.key)) {
-                    cNode.parent.left = null;
-                }
-                else {
-                    cNode.parent.right = null;
-                }
-            }
-            else {
-                root = null;
-            }
-        } else if (pNode == null || pNode.twoChild()) { // cNode is root or has two children
-            BSTNode sNode = leftMax(cNode);
-            if (sNode == null || sNode == cNode) {
-                sNode = rightMin(cNode);
-            }
-            setLinkToNull(sNode);
-            cNode.key = sNode.key;
-            cNode.value = sNode.value;
-            sNode = null;
-        } else if (cNode.oneChild()) { // TODO
-            BSTNode child = findChild(cNode);
-            if (cNode.parent.left != null && cNode.parent.left.key.equals(cNode.key)) {
-                cNode.parent.left = child;
-            }
-            else {
-                cNode.parent.right = child;
-            }
-            child.parent = cNode.parent;
-        }
-        }
-
     @Override
     public V remove(K key) {
-        BSTNode cNode = findNode(key);
-        V value = cNode.value;
-        remove(cNode);
-        size -= 1;
-        return value;
+        return remove(key, null);
     }
 
     @Override
     public V remove(K key, V value) {
-        BSTNode cNode = findNode(key);
+        BSTNode pNode = findNode(key,true);
+        String direction = findDirection(pNode, key);
+        BSTNode cNode = findChild(pNode, direction);
+
         if (!cNode.key.equals(key)) {
             return null;
         }
         if (value == null || cNode.value == value) {
-            remove(cNode);
+            remove(cNode, pNode, direction);
         }
         size -= 1;
         return cNode.value;
