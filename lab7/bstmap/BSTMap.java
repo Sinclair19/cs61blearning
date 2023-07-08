@@ -18,14 +18,6 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
 
         public BSTNode parent;
 
-        public BSTNode(K key, V value, BSTNode left, BSTNode right, BSTNode parent) {
-            this.key = key;
-            this.value = value;
-            this.left = left;
-            this.right = right;
-            this.parent = parent;
-        }
-
         //create leaf node
         public BSTNode(K key, V value) {
             this.key = key;
@@ -37,6 +29,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         public boolean twoChild() {
             return (this.left != null && this.right != null);
         }
+
         public boolean oneChild() {
             return !this.isLeaf() && (this.left == null || this.right == null);
         }  // not leaf and have one child is null
@@ -77,28 +70,11 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         return leftMax(node.right);
     }
 
-    private BSTNode rightMin(BSTNode node) {
-        if (node.left == null) {
+    private BSTNode rightMin(BSTNode node) { // chose one between leftMax and rightMin
+        if (node == null || node.left == null) {
             return node;
         }
         return rightMin(node.left);
-    }
-
-    private String findDirection(BSTNode node, K key) {
-        if (node == null) { // if node is root
-            return null;
-        }
-        if (node.left != null && node.left.key.equals(key)) {
-            return "left";
-        }
-        return "right";
-    }
-
-    private BSTNode findChild(BSTNode pNode) {
-        if (pNode == null) {
-            return root;
-        }
-        return pNode.left != null ? pNode.left : pNode.right;
     }
 
     private BSTNode findNode(K key) {
@@ -138,12 +114,10 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         BSTNode find = findNode(key);
         if (find.key == key) {
             find.value = value;
-        }
-        else {
+        } else {
             if (key.compareTo(find.key) < 0) {
                 find.left = temp;
-            }
-            else {
+            } else {
                 find.right = temp;
             }
             temp.parent = find;
@@ -201,57 +175,68 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     public Set<K> keySet() {
         HashSet<K> keySet = new HashSet<>();
         Iterable<K> iterable = this;
-        for (K key: iterable) {
+        for (K key : iterable) {
             keySet.add(key);
         }
         return keySet;
     }
 
-    private void setLinkToNull(BSTNode node) {
-        if (node.parent != null) {
-            if (node.parent.left != null && node.parent.left.key.equals(node.key)) {
-                node.parent.left = null;
+    private void removeRoot() {
+        if (root.isLeaf()) {
+            root = null;
+        } else if (root.oneChild()) {
+            root = root.left == null ? root.right : root.left;
+            root.parent = null; // fully set node to root
+        } else {
+            BSTNode sNode = leftMax(root.left);
+            if (!sNode.parent.key.equals(root.key)) {
+                if (sNode.left != null) {
+                    sNode.left.parent = sNode.parent;
+                    sNode.parent.right = sNode.left;
+                } else {
+                    sNode.parent.right = null;
+                }
+            } else {
+                if (sNode.left != null) {
+                    sNode.left.parent = sNode.parent;
+                    sNode.parent.left = sNode.left;
+                } else {
+                    sNode.parent.left = null;
+                }
             }
-            else {
-                node.parent.right = null;
-            }
+
+            root.key = sNode.key;
+            root.value = sNode.value;
         }
     }
 
     private void remove(BSTNode cNode) {
         BSTNode pNode = cNode.parent;
-        if (cNode.isLeaf()) { //child node is leaf
-            if (cNode.parent != null) {
+        if (pNode == null) {
+            removeRoot(); // remove root case
+        } else {
+            if (cNode.isLeaf()) {
                 if (cNode.parent.left != null && cNode.parent.left.key.equals(cNode.key)) {
                     cNode.parent.left = null;
-                }
-                else {
+                } else {
                     cNode.parent.right = null;
                 }
+            } else if (cNode.oneChild()) {
+                BSTNode child = cNode.left == null ? cNode.right : cNode.left;
+                if (cNode.parent.left != null && cNode.parent.left.key.equals(cNode.key)) {
+                    cNode.parent.left = child;
+                } else {
+                    cNode.parent.right = child;
+                }
+                child.parent = cNode.parent;
+            } else if (cNode.twoChild()) {
+                BSTNode sNode = leftMax(cNode.left);
+                cNode.parent.right = sNode.left; //only this situation can happen
+                cNode.key = sNode.key;
+                cNode.value = sNode.value;
             }
-            else {
-                root = null;
-            }
-        } else if (pNode == null || pNode.twoChild()) { // cNode is root or has two children
-            BSTNode sNode = leftMax(cNode);
-            if (sNode == null || sNode == cNode) {
-                sNode = rightMin(cNode);
-            }
-            setLinkToNull(sNode);
-            cNode.key = sNode.key;
-            cNode.value = sNode.value;
-            sNode = null;
-        } else if (cNode.oneChild()) { // TODO
-            BSTNode child = findChild(cNode);
-            if (cNode.parent.left != null && cNode.parent.left.key.equals(cNode.key)) {
-                cNode.parent.left = child;
-            }
-            else {
-                cNode.parent.right = child;
-            }
-            child.parent = cNode.parent;
         }
-        }
+    }
 
     @Override
     public V remove(K key) {
