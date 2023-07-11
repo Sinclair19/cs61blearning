@@ -8,7 +8,7 @@ import java.util.*;
  * <p>
  * Assumes null keys will never be inserted, and does not resize down upon remove().
  *
- * @author YOUR NAME HERE
+ * @author Sinclair19
  */
 public class MyHashMap<K, V> implements Map61B<K, V> {
 
@@ -100,7 +100,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         return new Collection[tableSize];
     }
 
-    // TODO: Implement the methods of the Map61B Interface below
+
     // Your code won't compile until you do so!
 
 
@@ -208,6 +208,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
     }
 
     /*
+    // two iterator way, unfinished
     private class HashMapIterator implements Iterator<K> {
 
         private Iterator<Collection<Node>> outerIterator;
