@@ -1242,3 +1242,101 @@ Some general good rules of thumb:
   - This happens because of overflow.
   - Using prime numbers helps avoid overflow issues (i.e., collisions due to overflow).
   - Why a small prime? Because it's easier to compute.
+
+# 13 Heaps and Priority Queues
+
+## 13.1 PQ Interface
+
+### The Priority Queue Interface
+```java
+/** (Min) Priority Queue: Allowing tracking and removal of 
+  * the smallest item in a priority queue. */
+public interface MinPQ<Item> {
+    /** Adds the item to the priority queue. */
+    public void add(Item x);
+    /** Returns the smallest item in the priority queue. */
+    public Item getSmallest();
+    /** Removes the smallest item from the priority queue. */
+    public Item removeSmallest();
+    /** Returns the size of the priority queue. */
+    public int size();
+}
+```
+
+### Priority Queue Implementation
+Analyzing the worst case runtimes of our desired operations  
+
+- Ordered Array
+  - `add`: $Θ(N)$
+  - `getSmallest`: $Θ(1)$
+  - `removeSmallest`: $Θ(N)$
+- Bushy BST
+  - `add`: $Θ(logN)$
+  - `getSmallest`: $Θ(logN)$
+  - `removeSmallest`: $Θ(logN)$
+- HashTable
+  - `add`: $Θ(1)$
+  - `getSmallest`: $Θ(N)$
+  - `removeSmallest`: $Θ(N)$
+
+## 13.2 Heaps
+
+### Heap Structure
+
+We will define our binary min-heap as being complete and obeying min-heap property:  
+- Min-heap: Every node is less than or equal to both of its children
+- Complete: Missing items only at the bottom level (if any), all nodes are as far left as possible.
+
+### Heap Operations
+- `add`: Add to the end of heap temporarily. Swim up the hierarchy to the proper place.
+  - Swimming involves swapping nodes if child < parent
+- `getSmallest`: Return the root of the heap This is guaranteed to be the minimum by our min-heap property
+- `removeSmallest`: Swap the last item in the heap into the root. Sink down the hierarchy to the proper place.
+  - Sinking involves swapping nodes if parent > child. Swap with the smallest child to preserve min-heap property.
+
+### Tree Representation
+
+#### Approach 1a, 1b, and 1c
+- In approach Tree1A, we consider creating pointers to our children and storing the value inside of the node object. These are hardwired links that give us fixed-width nodes.  
+- Alternatively, in Tree1B, we explore the use of arrays as representing the mapping between children and nodes. This would give us variable-width nodes, but also awkward traversals and performance will be worse.
+- Lastly, we can use the approach for Tree1C. This will be slightly different from the usual approaches that we've seen. Instead of only representing a node's children, we say that nodes can also maintain a reference to their siblings.
+
+### Approach 2
+For representing a tree, we can store the keys array as well as a parents array. The keys array represent which index maps to which key, and the parents array represents which key is a child of another key.  
+
+- The tree is complete. This is a property we have defined earlier.
+- The parents array has a sort of redundant pattern where elements are just doubled.
+- Reading the level-order of the tree, we see that it matches exactly the order of the keys in the keys array.
+
+### Approach 3
+In this approach, we assume that our tree is complete. This is to ensure that there are no "gaps" inside of our array representation. Thus, we will take this complex 2D structure of the tree and flatten it into an array.  
+
+### Swim
+Given this implementation, we define the following code for the "swim" described in the Heap Operations section.  
+```java
+public void swim(int k) {
+    if (keys[parent(k)] ≻ keys[k]) {
+       swap(k, parent(k));
+       swim(parent(k));              
+    }
+}
+```
+
+## 13.3 Implementation Consideration
+
+### The Implementation
+- `leftChild(k)` = $k∗2$
+- `rightChild(k)`= $k∗2+1$
+- `parent(k)` = $k/2$
+
+### Comparing to alternative implementations  
+
+|Methods|Ordered Array|Bushy BST|Hash Table|Heap|
+|---|---|---|---|---|
+|`add`|$Θ(N)$|$Θ(logN)$|$Θ(1)$|$Θ(logN)$|
+|`getSmallest`|$Θ(1)$|$Θ(logN)$|$Θ(N)$|$Θ(1)$|
+|`removeSmallest`|$Θ(N)$|$Θ(logN)$|$Θ(N)$|$Θ(logN)$|
+
+- Heap operations are amortized analysis, since the array will have to resize (not a big deal)
+- BST's can have constant time getSmallest if pointer is stored to smallest element
+- Array-based heaps take around 1/3rd the memory it takes to represent a heap using approach 1A (direct pointers to children)
