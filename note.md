@@ -1340,3 +1340,52 @@ public void swim(int k) {
 - Heap operations are amortized analysis, since the array will have to resize (not a big deal)
 - BST's can have constant time getSmallest if pointer is stored to smallest element
 - Array-based heaps take around 1/3rd the memory it takes to represent a heap using approach 1A (direct pointers to children)
+
+# 17 Tree Traversals and Graphs
+
+## 17.1 Tree recap
+A tree consists of:  
+- A set of nodes (or vertices). We use both terms interchangeably.
+- A set of edges that connect those nodes.
+  - Constraint: There is exactly one path between any two nodes.
+
+## 17.2 Tree Traversal
+Traversal a tree  
+1. Level order traversal.
+2. Depth-First traversals –– of which there are three: pre-order, in-order and post-order.
+
+### Level Order Traversal
+Iterate by levels, left to right.
+
+### Pre-order Traversal
+Visit the root (aka, do the action you want to do.) The action here is "print".  
+```java
+preOrder(BSTNode x) {
+    if (x == null) return;
+    print(x.key)
+    preOrder(x.left)
+    preOrder(x.right)
+}
+```
+
+### In-order Traversal
+Here, instead of visiting (aka printing) first, we'll first visit the left branch. Then we'll print. Then we'll visit the right branch.  
+```java
+inOrder(BSTNode x) {
+    if (x == null) return;    
+    inOrder(x.left)
+    print(x.key)
+    inOrder(x.right)
+}
+```
+
+### Post-order Traversal
+Again, same big-picture idea, but now we'll print left branch, then right branch, then ourselves.  
+```java
+postOrder(BSTNode x) {
+    if (x == null) return;    
+    postOrder(x.left)
+    postOrder(x.right)
+    print(x.key)   
+}
+```
