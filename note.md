@@ -1389,3 +1389,44 @@ postOrder(BSTNode x) {
     print(x.key)   
 }
 ```
+
+## 17.3 Graphs
+A graph consists of:  
+- A set of nodes (or vertices)
+- A set of zero of more edges, each of which connects two nodes.
+
+In general, note that all trees are also graphs, but not all graphs are trees.  
+
+### Simple Graphs only
+Graphs can be divided into two categories: simple graphs and multigraphs  
+
+And then there are cyclic graphs, i.e., there exists a way to start at a node, follow some unique edges, and return back to the same node you started from.  
+
+## 17.4 Graph Problems
+
+- s-t Path: Is there a path between vertices s and t?
+- Connectivity: Is the graph connected, i.e. is there a path between all vertices?
+- Biconnectivity: Is there a vertex whose removal disconnects the graph?
+- Shortest s-t Path: What is the shortest path between vertices s and t?
+- Cycle Detection: Does the graph contain any cycles?
+- Euler Tour: Is there a cycle that uses every edge exactly once?
+- Hamilton Tour: Is there a cycle that uses every vertex exactly once?
+- Planarity: Can you draw the graph on paper with no crossing edges?
+- Isomorphism: Are two graphs isomorphic (the same graph in disguise)?
+
+### s-t path
+```java
+mark s  // i.e., remember that you visited s already
+if (s == t):
+    return true;
+
+for child in unmarked_neighbors(s): // if a neighbor is marked, ignore!
+    if isconnected(child, t):
+        return true;
+
+return false;
+```
+
+we just developed a depth-first traversal (like pre-order, post-order, in-order) but for graphs. What did we do? Well, we marked ourself.  
+Then we visited our first child. Then our first child marked itself, and visited its children.  
+Then our first child's first child marked itself, and visited its children.  
