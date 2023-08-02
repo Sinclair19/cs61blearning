@@ -1430,3 +1430,47 @@ return false;
 we just developed a depth-first traversal (like pre-order, post-order, in-order) but for graphs. What did we do? Well, we marked ourself.  
 Then we visited our first child. Then our first child marked itself, and visited its children.  
 Then our first child's first child marked itself, and visited its children.  
+
+# 18 Graph Traversals and representation
+
+## 18.1 BFS  
+BFS (Breadth First Search) (also known as Level Order Traversal).  
+In DFS, we visit down the entire lineage of our first child before we even begin to look at our second child - we literally search depth first.  
+In BFS, we visit all of our immediate children before continuing on to any of our grandchildren.  
+In other words, we visit all nodes 1 edges from our source. Then, all nodes 2 edges from our source, etc.  
+The pseudocode for BFS  
+```
+Initialize the fringe (a queue with the starting vertex) and mark that vertex.
+Repeat until fringe is empty:
+Remove vertex v from the fringe.
+For each unmarked neighbor n of v:
+Mark n.
+Add n to fringe.
+Set edgeTo[n] = v.
+Set distTo[n] = distTo[v] + 1.
+```
+
+A fringe is just a term we use for the data structure we are using to store the nodes on the frontier of our traversal's discovery process (the next nodes it is waiting to look at). For BFS, we use a queue for our fringe.  
+`edgeTo[...]` is a map that helps us track how we got to node n; we got to it by following the edge from `v` to to `n`.  
+`distTo[...]` is a map that helps us track how far n is from the starting vertex.  
+Assuming that each edge is worth a distance of 1, then the distance to n is just one more than the distance to get to `v`  
+
+### DFS vs BFS
+Note however that DFS and BFS differ in more than just their fringe data structure.  
+They differ in the order of marking nodes.  
+For DFS we mark nodes only once we visit a node - aka pop it from the fringe.  
+As a result, it's possible to have multiple instances of the same node on the stack at a time if that node has been queued but not visited yet.  
+With BFS we mark nodes as soon as we add them to the fringe so this is not possible.
+Recursive DFS implements this naturally via the recursive stack frames; iterative DFS implements it manually:  
+```
+Initialize the fringe, an empty stack
+    push the starting vertex on the fringe
+    while fringe is not empty:
+        pop a vertex off the fringe
+        if vertex is not marked:
+            mark the vertex
+            visit vertex
+            for each neighbor of vertex:
+                if neighbor not marked:
+                    push neighbor to fringe
+```
