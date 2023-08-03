@@ -1474,3 +1474,42 @@ Initialize the fringe, an empty stack
                 if neighbor not marked:
                     push neighbor to fringe
 ```
+
+## 18.2 Representing Graphs
+
+### Graph API
+An API (Application Programming Interface) is a list of methods available to a user of our class, including the method signatures (what arguments/parameters each function accepts) and information regarding their behaviors.  
+
+For our Graph API, let's use the common convention of assigning each unique node to an integer number.  
+Doing so allows us to define our API to work with integers specifically, rather than introducing the need for generic types.  
+
+```java
+public class Graph {
+    public Graph(int V):               // Create empty graph with v vertices
+    public void addEdge(int v, int w): // add an edge v-w
+    Iterable<Integer> adj(int v):      // vertices adjacent to v
+    int V():                           // number of vertices
+    int E():                           // number of edges
+```
+
+### Graph Representations
+#### Adjacency Matrix
+One way we can do this is by using a 2D array. There is an edge connecting vertex s to t iff that corresponding cell is 1 (which represents true).  
+Notice that if the graph is undirected, the adjacency matrix will be symmetric across its diagonal (from the top left to the bottom right corners).  
+
+#### Adjacency Lists
+Another way is to maintain an array of lists, indexed by vertex number. Iff there is an edge from s to t, the list at array index s will contain t.  
+
+In practice, adjacency lists are most common since graphs tend to be sparse (there are not many edges in each bucket).  
+
+Further, DFS/BFS on a graph backed by adjacency lists runs in 
+$O(V+E)$, while on a graph backed by an adjacency matrix runs in $O(V^2)$
+
+Runtime of some basic operations for each representation:  
+
+|||||||
+|---|---|---|---|---|---|
+|idea|`addEdge(s, t)`|`for(w : adj(v))`|`print()`|`hasEdge(s, t)`|`space used`|
+|adjacency matrix|$Θ(1)$|$Θ(V)$|$Θ(V2)$|$Θ(1)$|$Θ(V2)$|
+|list of edges|$Θ(1)$|$Θ(E)$|$Θ(E)$|$Θ(E)$|$Θ(E)$|
+|adjacency list|$Θ(1)$|$Θ(1) to Θ(V)$|$Θ(V+E)$|$Θ(degree(v))$|$Θ(E+V)$|
