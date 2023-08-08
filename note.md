@@ -1513,3 +1513,13 @@ Runtime of some basic operations for each representation:
 |adjacency matrix|$Θ(1)$|$Θ(V)$|$Θ(V2)$|$Θ(1)$|$Θ(V2)$|
 |list of edges|$Θ(1)$|$Θ(E)$|$Θ(E)$|$Θ(E)$|$Θ(E)$|
 |adjacency list|$Θ(1)$|$Θ(1) to Θ(V)$|$Θ(V+E)$|$Θ(degree(v))$|$Θ(E+V)$|
+
+# 19 Shortest Paths
+
+## 19.1 Recap
+
+### recalls
+- DFS is worse for spindly graphs. Imagine a graph with 10000 nodes all spindly. We'll end up making 10000 recursive calls, which is bad for space.
+- BFS is worse for "bushy" graphs, because our queue gets used a lot.
+
+We developed an algorithm that works well on graphs with no edge labels. Here's what we did: we developed an algorithm that finds us the shortest (where shortest means the fewest number of edges) paths from a given source vertex.  
