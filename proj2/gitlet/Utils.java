@@ -236,4 +236,12 @@ class Utils {
         System.out.printf(msg, args);
         System.out.println();
     }
+
+    static void validateNumArgs(String cmd, String[] args, int n) {
+        if (args.length != n) {
+            throw new RuntimeException(
+                    String.format("Invalid number of arguments for: %s.", cmd));
+        }
+    }
+
 }
