@@ -1,6 +1,8 @@
 package gitlet;
 
 import java.io.File;
+import java.io.IOException;
+
 import static gitlet.Utils.*;
 
 // TODO: any imports you need here
@@ -25,18 +27,43 @@ public class Repository {
     /** The .gitlet directory. */
     public static final File GITLET_DIR = join(CWD, ".gitlet");
 
+    public static final File REFS_DIR = join(GITLET_DIR, "refs");
+
+    public static final File HEAD = join(GITLET_DIR, "HEAD");
+
+    public static final File BRANCHES_DIR = join(REFS_DIR, "branches");
+
+    public static final File OBJECTS_DIR = join(GITLET_DIR, "objects");
+
 
     /* TODO: fill in the rest of this class. */
 
-    private static boolean checkExist() {
-        return false;
+    private static void createDir() {
+        GITLET_DIR.mkdir();
+        REFS_DIR.mkdir();
+        BRANCHES_DIR.mkdir();
+        OBJECTS_DIR.mkdir();
     }
 
-    public static void initRepo() {
-        if (checkExist()) {
-            System.out.println("A Gitlet version-control system already exists in the current directory.");
-            System.exit(0);
+    private static void createFile() {
+        try {
+            HEAD.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+    }
+
+
+    public static void initRepo() {
+        if (Method.checkExist(GITLET_DIR)) {
+            Method.exit("A Gitlet version-control system already exists in the current directory.");
+        }
+        createDir();
+        createFile();
+        Commit first = new Commit("initial commit", null);
+        Branch master = new Branch("master", "");
+
+
     }
 
 }

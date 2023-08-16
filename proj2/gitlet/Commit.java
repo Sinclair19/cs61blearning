@@ -31,7 +31,7 @@ public class Commit {
 
     /* TODO: fill in the rest of this class. */
 
-    public void commit(String message, Commit p) {
+    public Commit(String message, Commit p) {
         this.message = message;
         this.parent = p;
         if (this.parent == null) {
