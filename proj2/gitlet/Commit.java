@@ -3,9 +3,7 @@ package gitlet;
 // TODO: any imports you need here
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date; // TODO: You'll likely use this in this class
-import java.util.TimeZone;
+import java.util.*;
 
 /** Represents a gitlet commit object.
  *  TODO: It's a good idea to give a description here of what else this Class
@@ -27,18 +25,32 @@ public class Commit {
 
     private Date time;
 
-    private Commit parent;
+    private List<String> parent;
+
+    // filename, ID
+    private HashMap<String, String> blobs;
+
+    private String ID;
 
     /* TODO: fill in the rest of this class. */
 
     public Commit(String message, Commit p) {
+        if (message == null) {
+            Method.exit("Please enter a commit message.");
+        }
         this.message = message;
-        this.parent = p;
+        this.parent.add(p.ID);
         if (this.parent == null) {
             setInitTime();
         } else {
             setTime();
         }
+        updateID();
+
+    }
+
+    private void updateID() {
+        this.ID = Utils.sha1(this.message, time.toString(), parent.toArray(), blobs.toString());
     }
 
     private void setInitTime() {
@@ -54,7 +66,7 @@ public class Commit {
         this.time = c.getTime();
     }
 
-    public Commit getParent() {
+    public List<String> getParentID() {
         return this.parent;
     }
 
@@ -69,5 +81,13 @@ public class Commit {
     public String getStrTime() {
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss z', 'EEEE, d MMMM yyyy");
         return formatter.format(this.time);
+    }
+
+    public String getID() {
+        return this.ID;
+    }
+
+    public Map<String, String> getBlobs () {
+        return this.blobs;
     }
 }

@@ -35,6 +35,8 @@ public class Repository {
 
     public static final File OBJECTS_DIR = join(GITLET_DIR, "objects");
 
+    public static final File STAGED_DIR = join(GITLET_DIR, "staged");
+
 
     /* TODO: fill in the rest of this class. */
 
@@ -43,6 +45,7 @@ public class Repository {
         REFS_DIR.mkdir();
         BRANCHES_DIR.mkdir();
         OBJECTS_DIR.mkdir();
+        STAGED_DIR.mkdir();
     }
 
     private static void createFile() {
@@ -61,8 +64,14 @@ public class Repository {
         createDir();
         createFile();
         Commit first = new Commit("initial commit", null);
-        Branch master = new Branch("master", "");
+        Branch master = new Branch("master", first.getID());
 
+    }
+
+    public static void add(String name) {
+        if (! Method.checkExist(GITLET_DIR)) {
+            Method.exit("No Gitlet exists in the current directory.");
+        }
 
     }
 
