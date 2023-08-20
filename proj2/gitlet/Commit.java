@@ -2,8 +2,12 @@ package gitlet;
 
 // TODO: any imports you need here
 
+import java.io.File;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static gitlet.Utils.join;
 
 /** Represents a gitlet commit object.
  *  TODO: It's a good idea to give a description here of what else this Class
@@ -11,7 +15,7 @@ import java.util.*;
  *
  *  @author TODO
  */
-public class Commit {
+public class Commit implements Serializable {
     /**
      * TODO: add instance variables here.
      *
@@ -32,21 +36,38 @@ public class Commit {
 
     private String ID;
 
+    private final File COMMITS_DIR = Repository.COMMITS_DIR;
+
+    private final File DIR;
+
     /* TODO: fill in the rest of this class. */
 
+
+
+
+    public Commit(String message) {
+        checkMessage(message);
+        this.message = message;
+        this.parent = null;
+        setInitTime();
+        updateID();
+        this.DIR = join(COMMITS_DIR, this.ID);
+    }
+
     public Commit(String message, Commit p) {
+        checkMessage(message);
+        this.message = message;
+        this.parent.add(p.ID);
+        setTime();
+        updateID();
+        this.DIR = join(COMMITS_DIR, this.ID);
+
+    }
+
+    private void checkMessage(String message) {
         if (message == null) {
             Method.exit("Please enter a commit message.");
         }
-        this.message = message;
-        this.parent.add(p.ID);
-        if (this.parent == null) {
-            setInitTime();
-        } else {
-            setTime();
-        }
-        updateID();
-
     }
 
     private void updateID() {
@@ -85,6 +106,10 @@ public class Commit {
 
     public String getID() {
         return this.ID;
+    }
+
+    public File getDIR() {
+        return this.DIR;
     }
 
     public Map<String, String> getBlobs () {

@@ -1,18 +1,64 @@
 package gitlet;
 
-public class Branch {
+import java.io.File;
+import java.io.Serializable;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+
+import static gitlet.Utils.join;
+
+public class Branch implements Serializable {
 
     private String name;
 
-    public String HEAD;
+    private File HEAD;
 
-    public Branch(String name, String HEAD) {
-        checkExist();
+    private File BRANCHES_DIR = Repository.BRANCHES_DIR;
+
+    private File DIR;
+
+    private Map<String, String> tracked;
+
+    public Branch(String name) {
+        this.checkExist();
         this.name = name;
-        this.HEAD = HEAD;
+        this.HEAD = null;
+        this.DIR = join(BRANCHES_DIR, name);
+        this.tracked = new TreeMap<>();
     }
 
-    private Boolean checkExist() {
-        return false;
+    public Branch(String name, HEAD HEAD) {
+        this.checkExist();
+        this.name = name;
+        this.HEAD = HEAD.getDIR();
+        this.DIR = join(BRANCHES_DIR, name);
+        this.tracked = new TreeMap<>();
     }
+
+    public void updateHEAD(Commit commit) {
+        HEAD newHEAD = new HEAD(this, commit);
+        this.HEAD = newHEAD.getDIR();
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public HEAD returnHEAD() {
+        return Method.readHEAD(HEAD);
+    }
+
+    public File getDIR() {
+        return this.DIR;
+    }
+
+    public Map<String, String> getTracked() {
+        return this.tracked;
+    }
+
+    public Boolean checkExist() {
+        return DIR.exists();
+    }
+
 }

@@ -2,6 +2,7 @@ package gitlet;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Calendar;
 
 import static gitlet.Utils.*;
 
@@ -29,7 +30,11 @@ public class Repository {
 
     public static final File REFS_DIR = join(GITLET_DIR, "refs");
 
-    public static final File HEAD = join(GITLET_DIR, "HEAD");
+    public static final File COMMITS_DIR = join(REFS_DIR, "commits");
+
+    public static final File HEADS_DIR = join(REFS_DIR, "heads");
+
+    public static final File CURRENT_HEAD = join(GITLET_DIR, "HEAD");
 
     public static final File BRANCHES_DIR = join(REFS_DIR, "branches");
 
@@ -43,6 +48,7 @@ public class Repository {
     private static void createDir() {
         GITLET_DIR.mkdir();
         REFS_DIR.mkdir();
+        COMMITS_DIR.mkdir();
         BRANCHES_DIR.mkdir();
         OBJECTS_DIR.mkdir();
         STAGED_DIR.mkdir();
@@ -50,7 +56,7 @@ public class Repository {
 
     private static void createFile() {
         try {
-            HEAD.createNewFile();
+            CURRENT_HEAD.createNewFile();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -63,14 +69,21 @@ public class Repository {
         }
         createDir();
         createFile();
-        Commit first = new Commit("initial commit", null);
-        Branch master = new Branch("master", first.getID());
+        Commit first = new Commit("initial commit");
+        Branch master = new Branch("master");
+        master.updateHEAD(first);
+        File commitDir = Method.returnIDDir(first.getID());
+        writeContents(commitDir, first);
 
     }
 
     public static void add(String name) {
+        File adding = join(CWD, name);
         if (! Method.checkExist(GITLET_DIR)) {
             Method.exit("No Gitlet exists in the current directory.");
+        }
+        if(!Method.checkExist(adding)) {
+            Method.exit("This file does not exist.");
         }
 
     }
