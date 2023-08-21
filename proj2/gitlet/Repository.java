@@ -79,12 +79,8 @@ public class Repository {
 
     public static void add(String name) {
         File adding = join(CWD, name);
-        if (! Method.checkExist(GITLET_DIR)) {
-            Method.exit("No Gitlet exists in the current directory.");
-        }
-        if(!Method.checkExist(adding)) {
-            Method.exit("This file does not exist.");
-        }
+        Method.ExistOrExit(GITLET_DIR, "No Gitlet exists in the current directory.");
+        Method.ExistOrExit(adding, "File does not exist.");
 
     }
 

@@ -17,6 +17,12 @@ public class Method {
         return f.exists();
     }
 
+    public static void ExistOrExit(File f, String message) {
+        if (!checkExist(f)) {
+            exit(message);
+        }
+    }
+
     public static File returnDir(File pDir, String id) {
         return join(pDir, id);
     }
