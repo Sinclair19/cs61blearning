@@ -81,6 +81,29 @@ public class Repository {
         File adding = join(CWD, name);
         Method.ExistOrExit(GITLET_DIR, "No Gitlet exists in the current directory.");
         Method.ExistOrExit(adding, "File does not exist.");
+        Stage now = Stage.read(STAGED_DIR);
+        now.add(adding);
+        now.write();
+    }
+
+    public static void remove(String name) {
+        File removing = join(CWD, name);
+        Method.ExistOrExit(GITLET_DIR, "No Gitlet exists in the current directory.");
+        Method.ExistOrExit(removing, "File does not exist.");
+        Stage now = Stage.read(STAGED_DIR);
+        now.remove(removing);
+        now.write();
+    }
+
+    public static void commit(String message) {
+        if (message.trim().isEmpty()) {
+            Method.exit("Please enter a commit message.");
+        }
+        Stage staging = Stage.read(STAGED_DIR);
+        if (staging.getAdding().isEmpty() && staging.getRemoving().isEmpty()) {
+            Method.exit("No changes added to the commit.");
+        }
+
 
     }
 

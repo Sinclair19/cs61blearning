@@ -10,7 +10,7 @@ public class Stage implements Serializable {
 
     private Map<String, String> adding;
 
-    private Set<String> removeing;
+    private Set<String> removing;
 
     private Map<String, String> tracked;
 
@@ -18,29 +18,32 @@ public class Stage implements Serializable {
 
     public Stage() {
         this.adding = new HashMap<>();
-        this.removeing = new TreeSet<>();
+        this.removing = new TreeSet<>();
         this.tracked = new TreeMap<>();
     }
 
-    public void add(String filename) {
-        File file = join(Repository.CWD, filename);
+    public void add(File file) {
+        //File file = join(Repository.CWD, filename);
+        String filepath = file.getAbsolutePath();
         Method.ExistOrExit(file, "File does not exist.");
         Blob fileBlob = new Blob(file);
         String fileSha1 = fileBlob.getID();
-        if (isNEWorModified(filename, fileSha1)) {
-            this.adding.put(filename,fileSha1);
-            this.tracked.put(filename, fileSha1);
+        if (isNEWorModified(file, fileSha1)) {
+            this.adding.put(filepath, fileSha1);
+            this.tracked.put(filepath, fileSha1);
             fileBlob.write();
         }
     }
 
-    public void addRemove(String filename) {
-        this.removeing.add(filename);
-        this.adding.remove(filename);
-        this.tracked.remove(filename);
+    public void remove(File file) {
+        String filepath = file.getAbsolutePath();
+        this.removing.add(filepath);
+        // remove key, doesn't matter what value it is
+        this.adding.remove(filepath);
+        this.tracked.remove(filepath);
     }
 
-    public boolean isNEWorModified(String filename, String fileSha1) {
+    public boolean isNEWorModified(File file, String fileSha1) {
         Branch current = Method.getCurrentBranch();
         Map<String, String> Branch_tracked = current.getTracked();
         if (!Branch_tracked.containsKey(fileSha1)) {
@@ -49,11 +52,19 @@ public class Stage implements Serializable {
         return false;
     }
 
+    public Map<String, String> getAdding () {
+        return this.adding;
+    }
+
+    public Set<String> getRemoving () {
+        return this.removing;
+    }
+
     public void write() {
         writeObject(DIR, this);
     }
 
-    public void read(File file) {
-       readObject(file, Stage.class);
+    public static Stage read(File file) {
+       return readObject(file, Stage.class);
     }
 }

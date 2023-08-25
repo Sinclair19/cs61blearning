@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import static gitlet.Utils.join;
+import static gitlet.Utils.*;
 
 public class Branch implements Serializable {
 
@@ -38,6 +38,7 @@ public class Branch implements Serializable {
 
     public void updateHEAD(Commit commit) {
         HEAD newHEAD = new HEAD(this, commit);
+        newHEAD.write();
         this.HEAD = newHEAD.getDIR();
     }
 
@@ -59,6 +60,14 @@ public class Branch implements Serializable {
 
     public Boolean checkExist() {
         return DIR.exists();
+    }
+
+    public void write() {
+        writeObject(DIR, this);
+    }
+
+    public Branch read(File file) {
+        return readObject(file, Branch.class);
     }
 
 }

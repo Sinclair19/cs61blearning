@@ -22,6 +22,10 @@ public class HEAD implements Serializable {
         this.commit = commit.getDIR();
     }
 
+    public void updateHEAD(Commit commit) {
+        this.commit = commit.getDIR();
+    }
+
     public Branch getBranch () {
         return readObject(this.branch, Branch.class);
     }
@@ -34,5 +38,12 @@ public class HEAD implements Serializable {
         return DIR;
     }
 
+    public void write() {
+        writeObject(DIR, this);
+    }
+
+    public HEAD read(File file) {
+        return readObject(file, HEAD.class);
+    }
 
 }

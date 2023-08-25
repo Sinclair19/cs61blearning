@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static gitlet.Utils.join;
+import static gitlet.Utils.*;
 
 /** Represents a gitlet commit object.
  *  TODO: It's a good idea to give a description here of what else this Class
@@ -32,7 +32,9 @@ public class Commit implements Serializable {
     private List<String> parent;
 
     // filename, ID
-    private HashMap<String, String> blobs;
+    private Map<String, String> adding;
+
+    private Set<String> removing;
 
     private String ID;
 
@@ -48,20 +50,33 @@ public class Commit implements Serializable {
     public Commit(String message) {
         checkMessage(message);
         this.message = message;
+        createMap();
         this.parent = null;
         setInitTime();
         updateID();
         this.DIR = join(COMMITS_DIR, this.ID);
     }
 
-    public Commit(String message, Commit p) {
+    public Commit(String message, Commit p, Stage Staging) {
         checkMessage(message);
         this.message = message;
+        createMap();
         this.parent.add(p.ID);
         setTime();
+        configMap(Staging);
         updateID();
         this.DIR = join(COMMITS_DIR, this.ID);
 
+    }
+
+    private void createMap () {
+        this.adding = new TreeMap<>();
+        this.removing = new TreeSet<>();
+    }
+
+    private void configMap (Stage staging) {
+        this.adding = staging.getAdding();
+        this.removing = staging.getRemoving();
     }
 
     private void checkMessage(String message) {
@@ -71,7 +86,7 @@ public class Commit implements Serializable {
     }
 
     private void updateID() {
-        this.ID = Utils.sha1(this.message, time.toString(), parent.toArray(), blobs.toString());
+        this.ID = Utils.sha1(this);
     }
 
     private void setInitTime() {
@@ -114,5 +129,13 @@ public class Commit implements Serializable {
 
     public Map<String, String> getBlobs () {
         return this.blobs;
+    }
+
+    public void write() {
+        writeObject(DIR, this);
+    }
+
+    public Commit read(File file) {
+        return readObject(file, Commit.class);
     }
 }
