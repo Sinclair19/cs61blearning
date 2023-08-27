@@ -127,8 +127,12 @@ public class Commit implements Serializable {
         return this.DIR;
     }
 
-    public Map<String, String> getBlobs () {
-        return this.blobs;
+    public Map<String, String> getAdding () {
+        return this.adding;
+    }
+
+    public Set<String> getRemoving () {
+        return this.removing;
     }
 
     public void write() {

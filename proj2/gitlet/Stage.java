@@ -52,6 +52,10 @@ public class Stage implements Serializable {
         return false;
     }
 
+    public boolean isEmpty() {
+        return this.adding.isEmpty() && this.removing.isEmpty();
+    }
+
     public Map<String, String> getAdding () {
         return this.adding;
     }

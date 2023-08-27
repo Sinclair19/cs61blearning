@@ -43,4 +43,8 @@ public class Method {
         HEAD CurrentHEAD = getCurrentHEAD();
         return CurrentHEAD.getBranch();
     }
+
+    public static void writeCurrentHEAD(HEAD head) {
+        writeObject(Repository.CURRENT_HEAD, head);
+    }
 }

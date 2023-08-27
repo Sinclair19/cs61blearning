@@ -30,7 +30,7 @@ public class HEAD implements Serializable {
         return readObject(this.branch, Branch.class);
     }
 
-    public Serializable getCommit () {
+    public Commit getCommit () {
         return readObject(this.commit, Commit.class);
     }
 
@@ -42,7 +42,7 @@ public class HEAD implements Serializable {
         writeObject(DIR, this);
     }
 
-    public HEAD read(File file) {
+    public static HEAD read(File file) {
         return readObject(file, HEAD.class);
     }
 

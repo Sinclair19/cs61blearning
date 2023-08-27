@@ -72,6 +72,7 @@ public class Repository {
         Commit first = new Commit("initial commit");
         Branch master = new Branch("master");
         master.updateHEAD(first);
+        Method.writeCurrentHEAD(master.returnHEAD());
         File commitDir = Method.returnIDDir(first.getID());
         writeContents(commitDir, first);
 
@@ -104,7 +105,23 @@ public class Repository {
             Method.exit("No changes added to the commit.");
         }
 
+        Branch current_branch = Method.getCurrentBranch();
+        Commit parent_commit = current_branch.returnHEAD().getCommit();
+        Stage now = Stage.read(STAGED_DIR);
+        if (now.isEmpty()) {
+            Method.exit("No changes added to the commit.");
+        }
+        Commit new_commit = new Commit(message, parent_commit, now);
 
+        // update HEAD and tracking list
+        current_branch.updateHEAD(new_commit);
+        current_branch.updateTracked(new_commit);
+
+        Stage new_stage = new Stage();
+
+        new_commit.write();
+        new_stage.write();
+        current_branch.write();
     }
 
 }
