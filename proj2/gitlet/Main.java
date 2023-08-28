@@ -26,6 +26,10 @@ public class Main {
                 Utils.validateNumArgs("commit", args, 2);
                 Repository.commit(args[1]);
                 break;
+            case "rm":
+                Utils.validateNumArgs("rm", args, 1);
+                Repository.remove(args[1]);
+                break;
         }
     }
 }

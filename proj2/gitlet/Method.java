@@ -1,6 +1,7 @@
 package gitlet;
 
 import java.io.File;
+import java.util.Map;
 
 import static gitlet.Utils.*;
 
@@ -33,6 +34,11 @@ public class Method {
 
     public static HEAD readHEAD(File dir) {
         return readObject(dir, HEAD.class);
+    }
+
+    public static Map<String, String> getCurrentTracked() {
+        Branch current = getCurrentBranch();
+        return current.getTracked();
     }
 
     public static HEAD getCurrentHEAD() {

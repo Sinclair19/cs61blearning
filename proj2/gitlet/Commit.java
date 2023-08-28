@@ -36,6 +36,8 @@ public class Commit implements Serializable {
 
     private Set<String> removing;
 
+    private Map<String, String> tracked;
+
     private String ID;
 
     private final File COMMITS_DIR = Repository.COMMITS_DIR;
@@ -72,6 +74,7 @@ public class Commit implements Serializable {
     private void createMap () {
         this.adding = new TreeMap<>();
         this.removing = new TreeSet<>();
+        this.tracked = new TreeMap<>();
     }
 
     private void configMap (Stage staging) {
@@ -100,6 +103,14 @@ public class Commit implements Serializable {
     private void setTime() {
         Calendar c = Calendar.getInstance();
         this.time = c.getTime();
+    }
+
+    public void updateTracked(Map<String, String> map) {
+        this.tracked = map;
+    }
+
+    public Map<String, String> getTracked() {
+        return this.tracked;
     }
 
     public List<String> getParentID() {

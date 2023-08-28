@@ -64,6 +64,7 @@ public class Branch implements Serializable {
         for (String key : commit.getRemoving()) {
             this.tracked.remove(key);
         }
+        commit.updateTracked(this.tracked);
     }
 
     public Map<String, String> getTracked() {

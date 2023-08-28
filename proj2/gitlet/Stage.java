@@ -37,15 +37,15 @@ public class Stage implements Serializable {
 
     public void remove(File file) {
         String filepath = file.getAbsolutePath();
+        this.tracked.remove(filepath);
         this.removing.add(filepath);
         // remove key, doesn't matter what value it is
         this.adding.remove(filepath);
-        this.tracked.remove(filepath);
+        file.delete();
     }
 
     public boolean isNEWorModified(File file, String fileSha1) {
-        Branch current = Method.getCurrentBranch();
-        Map<String, String> Branch_tracked = current.getTracked();
+        Map<String, String> Branch_tracked = Method.getCurrentTracked();
         if (!Branch_tracked.containsKey(fileSha1)) {
             return !this.tracked.containsKey(fileSha1);
         }
@@ -56,12 +56,27 @@ public class Stage implements Serializable {
         return this.adding.isEmpty() && this.removing.isEmpty();
     }
 
+    public boolean isStagedorTracked(File file) {
+        String filepath = file.getAbsolutePath();
+        if (this.tracked.containsKey(filepath)) {
+            return true;
+        }
+        if (Method.getCurrentTracked().containsKey(filepath)) {
+            return true;
+        }
+        return false;
+    }
+
     public Map<String, String> getAdding () {
         return this.adding;
     }
 
     public Set<String> getRemoving () {
         return this.removing;
+    }
+
+    public Map<String, String> getTracked() {
+        return this.tracked;
     }
 
     public void write() {

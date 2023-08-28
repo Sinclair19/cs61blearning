@@ -90,8 +90,11 @@ public class Repository {
     public static void remove(String name) {
         File removing = join(CWD, name);
         Method.ExistOrExit(GITLET_DIR, "No Gitlet exists in the current directory.");
-        Method.ExistOrExit(removing, "File does not exist.");
+
         Stage now = Stage.read(STAGED_DIR);
+        if (!now.isStagedorTracked(removing)) {
+            Method.exit("No reason to remove the file.");
+        }
         now.remove(removing);
         now.write();
     }
