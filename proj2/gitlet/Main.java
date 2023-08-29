@@ -27,8 +27,16 @@ public class Main {
                 Repository.commit(args[1]);
                 break;
             case "rm":
-                Utils.validateNumArgs("rm", args, 1);
+                Utils.validateNumArgs("rm", args, 2);
                 Repository.remove(args[1]);
+                break;
+            case "log":
+                Utils.validateNumArgs("log", args, 1);
+                Log.printLog();
+                break;
+            case "global-log":
+                Utils.validateNumArgs("global-log", args, 1);
+                Log.printGlobalLog();
                 break;
         }
     }

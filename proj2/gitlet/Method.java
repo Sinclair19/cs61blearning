@@ -53,4 +53,16 @@ public class Method {
     public static void writeCurrentHEAD(HEAD head) {
         writeObject(Repository.CURRENT_HEAD, head);
     }
+
+    public static Commit getCurrentCommit() {
+        return getCurrentHEAD().getCommit();
+    }
+
+    public static Commit getCommit(String id) {
+        if (id != null) {
+            File dir = join(Repository.COMMITS_DIR, id);
+            return readObject(dir, Commit.class);
+        }
+        return null;
+    }
 }

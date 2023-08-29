@@ -113,8 +113,12 @@ public class Commit implements Serializable {
         return this.tracked;
     }
 
-    public List<String> getParentID() {
+    public List<String> getParentList() {
         return this.parent;
+    }
+
+    public String getFirstParent () {
+        return this.parent.get(0);
     }
 
     public String getMessage() {
@@ -132,6 +136,12 @@ public class Commit implements Serializable {
 
     public String getID() {
         return this.ID;
+    }
+
+    public String getLogMessage () {
+        return "commit " + getID() + "\n" +
+                "Date:" + getStrTime() + "\n" +
+                getMessage() + "\n";
     }
 
     public File getDIR() {
