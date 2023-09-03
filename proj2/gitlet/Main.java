@@ -38,6 +38,10 @@ public class Main {
                 Utils.validateNumArgs("global-log", args, 1);
                 Log.printGlobalLog();
                 break;
+            case "find":
+                Utils.validateNumArgs("find", args, 2);
+                Log.findMessage(args[1]);
+                break;
         }
     }
 }

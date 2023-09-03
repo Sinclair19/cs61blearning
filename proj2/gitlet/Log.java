@@ -1,5 +1,6 @@
 package gitlet;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Log {
@@ -16,7 +17,7 @@ public class Log {
     }
 
     public static void printGlobalLog() {
-        List<String> commitList = Utils.plainFilenamesIn(Repository.COMMITS_DIR);
+        List<String> commitList = Method.getCommitList();
         if (commitList == null) {
             System.out.println();
             return;
@@ -30,6 +31,23 @@ public class Log {
         Commit commit = Method.getCommit(id);
         System.out.print("\n===\n");
         System.out.print(commit.getLogMessage());
+    }
+
+    public static void findMessage(String message) {
+        List<String> commitList = Method.getCommitList();
+        StringBuilder str = new StringBuilder();
+        if (commitList != null) {
+            for (String id : commitList) {
+                Commit commit = Method.getCommit(id);
+                if (commit.getMessage().equals(message)) {
+                    str.append(id).append("\n");
+                }
+            }
+        }
+        if (!(str.length() == 0)) {
+            Method.exit(str.toString());
+        }
+        Method.exit("Found no commit with that message.");
     }
 
 }

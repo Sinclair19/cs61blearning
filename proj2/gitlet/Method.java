@@ -1,6 +1,7 @@
 package gitlet;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 import static gitlet.Utils.*;
@@ -64,5 +65,9 @@ public class Method {
             return readObject(dir, Commit.class);
         }
         return null;
+    }
+
+    public static List<String> getCommitList() {
+        return Utils.plainFilenamesIn(Repository.COMMITS_DIR);
     }
 }
