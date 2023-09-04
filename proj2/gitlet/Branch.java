@@ -67,6 +67,11 @@ public class Branch implements Serializable {
         commit.updateTracked(this.tracked);
     }
 
+    public boolean isTracked(File file) {
+        String path = file.getAbsolutePath();
+        return this.tracked.containsKey(path);
+    }
+
     public Map<String, String> getTracked() {
         return this.tracked;
     }

@@ -1,6 +1,7 @@
 package gitlet;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +32,10 @@ public class Method {
 
     public static File returnIDDir(String ID) {
         return join(Repository.COMMITS_DIR, ID);
+    }
+
+    public static String returnFileID(File file) {
+        return Utils.sha1(file.getAbsolutePath(), Utils.readContents(file)); // TODO: fix path
     }
 
     public static HEAD readHEAD(File dir) {
@@ -74,4 +79,16 @@ public class Method {
     public static List<String> getCommitList() {
         return Utils.plainFilenamesIn(Repository.COMMITS_DIR);
     }
+
+    public static List<String> getfileASList(File file) {
+        List<String> all = Utils.plainFilenamesIn(file);
+        if (all == null) {
+            return new ArrayList<String>();
+        }
+        if (file.equals(Repository.CWD)) {
+            all.remove(".gitlet");
+        }
+        return all;
+    }
+
 }

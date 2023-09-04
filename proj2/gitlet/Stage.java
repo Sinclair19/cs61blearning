@@ -67,6 +67,11 @@ public class Stage implements Serializable {
         return false;
     }
 
+    public boolean isTracked(File file) {
+        String path = file.getAbsolutePath();
+        return this.tracked.containsKey(path);
+    }
+
     public Map<String, String> getAdding () {
         return this.adding;
     }
