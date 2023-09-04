@@ -67,6 +67,10 @@ public class Method {
         return null;
     }
 
+    public static Stage getStaging() {
+        return Stage.read(Repository.STAGED_DIR);
+    }
+
     public static List<String> getCommitList() {
         return Utils.plainFilenamesIn(Repository.COMMITS_DIR);
     }

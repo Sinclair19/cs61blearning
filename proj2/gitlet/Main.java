@@ -42,6 +42,10 @@ public class Main {
                 Utils.validateNumArgs("find", args, 2);
                 Log.findMessage(args[1]);
                 break;
+            case "status":
+                Utils.validateNumArgs("status", args, 1);
+                Status.printStatus();
+                break;
         }
     }
 }

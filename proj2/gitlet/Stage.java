@@ -79,6 +79,14 @@ public class Stage implements Serializable {
         return this.tracked;
     }
 
+    public List<String> getAddingAslist() {
+        return new ArrayList<String>(this.adding.keySet());
+    }
+
+    public List<String> getRemovingAslist() {
+        return new ArrayList<String>(this.removing);
+    }
+
     public void write() {
         writeObject(DIR, this);
     }
