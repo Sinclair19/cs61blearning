@@ -34,11 +34,13 @@ public class Blob implements Serializable {
         return this.filepath;
     }
 
+    public byte[] getContent() { return this.content; }
+
     public void write() {
         Utils.writeObject(DIR, this);
     }
 
-    public void read(File file) {
-        Utils.readObject(file, Blob.class);
+    public static Blob read(File file) {
+        return Utils.readObject(file, Blob.class);
     }
 }

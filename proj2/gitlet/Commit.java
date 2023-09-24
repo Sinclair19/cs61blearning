@@ -144,6 +144,15 @@ public class Commit implements Serializable {
                 getMessage() + "\n";
     }
 
+    public File getBlob(File file) { //get blob file with its file
+        String filepath = file.getAbsolutePath();
+        if (this.tracked.containsKey(filepath)) {
+            return join(Repository.OBJECTS_DIR, this.tracked.get(filepath));
+        } else {
+            return null;
+        }
+    }
+
     public File getDIR() {
         return this.DIR;
     }

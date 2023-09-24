@@ -33,13 +33,27 @@ public class Checkout {
         } else {
             commit = Method.getCommit(ID);
         }
+        if (commit == null) {
+            Method.exit("No such commit");
+        }
         checkoutFileID(commit, file);
     }
 
     public void checkoutFileID(Commit commit, File file) {
+        File Blobfile = commit.getBlob(file);
+        if (Blobfile == null) {
+            Method.exit("File does not exist in this commit");
+        }
+        Blob stored = Blob.read(Blobfile);
+        writeBlob(stored, file);
 
     }
-    
+
+    public void writeBlob(Blob stored, File write) {
+        byte[] bytes = stored.getContent();
+        Utils.writeContents(write, (Object) bytes);
+    }
+
     public void checkoutBranch(String branchName){
     }
 }
