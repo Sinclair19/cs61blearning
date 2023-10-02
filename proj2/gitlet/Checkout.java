@@ -15,7 +15,7 @@ public class Checkout {
                 checkoutFileID(args[1], args[3]); //checkout [commit id] -- [file name]
             }
         } else if (args.length == 2) {
-            checkoutBranch(args[1]); //checkout [commit id] -- [file name]
+            checkoutBranch(args[1]); //checkout [branch name]
         } else {
             Method.exit("Incorrect operands");
         }
@@ -42,7 +42,7 @@ public class Checkout {
     public void checkoutFileID(Commit commit, File file) {
         File Blobfile = commit.getBlob(file);
         if (Blobfile == null) {
-            Method.exit("File does not exist in this commit");
+            Method.exit("File does not exist in that commit");
         }
         Blob stored = Blob.read(Blobfile);
         writeBlob(stored, file);
@@ -55,5 +55,16 @@ public class Checkout {
     }
 
     public void checkoutBranch(String branchName){
+        File checkBranch = join(Repository.BRANCHES_DIR, branchName);
+        Method.ExistOrExit(checkBranch, "No such branch exists.");
+        Branch branch = Branch.read(checkBranch);
+        Branch current = Method.getCurrentBranch();
+        if (branch.getName().equals(current.getName())) {
+            Method.exit("No need to checkout the current branch.");
+        }
+        Method.checkUntracked(); //check if there are untracked files
+
+        Method.clean(Repository.CWD);
+        // TODO: branch switch and restore files
     }
 }

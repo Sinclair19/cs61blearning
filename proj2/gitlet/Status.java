@@ -84,4 +84,10 @@ public class Status {
         return returnList;
     }
 
+    // get current Untracked;
+    public static List<String> getUntracked() {
+        Stage stage = Method.getStaging();
+        Branch branch = Method.getCurrentBranch();
+        return getUntracked(stage, branch);
+    }
 }

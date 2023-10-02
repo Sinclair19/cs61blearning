@@ -84,7 +84,7 @@ public class Branch implements Serializable {
         writeObject(DIR, this);
     }
 
-    public Branch read(File file) {
+    public static Branch read(File file) {
         return readObject(file, Branch.class);
     }
 

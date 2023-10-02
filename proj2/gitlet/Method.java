@@ -91,4 +91,19 @@ public class Method {
         return all;
     }
 
+    public static void checkUntracked() {
+        if (! Status.getUntracked().isEmpty()) {
+            Method.exit("There is an untracked file in the way; " +
+                    "delete it, or add and commit it first.");
+        }
+    }
+
+    public static void clean(File file) {
+        List<String> files = plainFilenamesIn(file);
+        if (files != null) {
+            for (String s : files) {
+                join(file, s).delete();
+            }
+        }
+    }
 }

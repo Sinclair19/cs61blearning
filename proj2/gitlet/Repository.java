@@ -127,5 +127,4 @@ public class Repository {
         new_stage.write();
         current_branch.write();
     }
-
 }
