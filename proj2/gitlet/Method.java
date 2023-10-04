@@ -64,12 +64,34 @@ public class Method {
         return getCurrentHEAD().getCommit();
     }
 
-    public static Commit getCommit(String id) {
-        if (id != null) {
-            File dir = join(Repository.COMMITS_DIR, id);
+    public static Commit getCommit(String ID) {
+        ID = checkCommitID(ID); //convert shortid to long id;
+        if (ID != null) {
+            File dir = join(Repository.COMMITS_DIR, ID);
             return readObject(dir, Commit.class);
         }
         return null;
+    }
+
+    private static String checkCommitID(String ID) {
+        int length = ID.length();
+        if (length != 40) {
+            List<String> IDlist = plainFilenamesIn(Repository.COMMITS_DIR);
+            if (IDlist != null) {
+                for (String mID : IDlist) {
+                    if (mID.substring(0, length - 1).equals(ID)) {
+                        return mID;
+                    }
+                }
+            }
+            return null;
+        }
+        return ID;
+    }
+
+
+    public static Blob getBlob(String ID) {
+        return Blob.read(join(Repository.OBJECTS_DIR, ID));
     }
 
     public static Stage getStaging() {
@@ -98,9 +120,10 @@ public class Method {
         }
     }
 
-    public static void clean(File file) {
+    public static void clean(File file, List<String> tracked) {
         List<String> files = plainFilenamesIn(file);
         if (files != null) {
+            files.removeAll(tracked); //delete all files that are not tracked in tracked list
             for (String s : files) {
                 join(file, s).delete();
             }

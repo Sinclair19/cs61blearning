@@ -46,6 +46,9 @@ public class Main {
                 Utils.validateNumArgs("status", args, 1);
                 Status.printStatus();
                 break;
+            case "checkout":
+                Checkout.CheckOperands(args);
+                break;
         }
     }
 }
