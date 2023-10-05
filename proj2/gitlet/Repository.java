@@ -127,4 +127,16 @@ public class Repository {
         new_stage.write();
         current_branch.write();
     }
+
+    public static void branch(String name) {
+        File newBranchFile = join(BRANCHES_DIR, name);
+        if (Method.checkExist(newBranchFile)) {
+            Method.exit("A branch with that name already exists.");
+        }
+
+        Branch newBranch = new Branch(name);
+        newBranch.updateHEAD(Method.getCurrentCommit());
+        newBranch.write();
+
+    }
 }

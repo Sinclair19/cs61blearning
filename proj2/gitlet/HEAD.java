@@ -16,6 +16,12 @@ public class HEAD implements Serializable {
 
     private final File branch;
 
+    public HEAD(Branch branch) {
+        this.DIR = join(HEAD_DIR, branch.getName());
+        this.branch = branch.getDIR();
+        this.commit = null;
+    }
+
     public HEAD (Branch branch, Commit commit) {
         this.DIR = join(HEAD_DIR, branch.getName());
         this.branch = branch.getDIR();

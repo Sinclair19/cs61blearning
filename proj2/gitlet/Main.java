@@ -49,6 +49,9 @@ public class Main {
             case "checkout":
                 Checkout.CheckOperands(args);
                 break;
+            case "branch":
+                Utils.validateNumArgs("branch", args, 2);
+                Repository.branch(args[1]);
         }
     }
 }

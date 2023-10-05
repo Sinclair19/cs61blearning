@@ -29,6 +29,8 @@ public class Branch implements Serializable {
         this.head = null;
         this.DIR = join(BRANCHES_DIR, name);
         this.THIS_HEAD_DIR = join(Repository.HEADS_DIR, this.name);
+        HEAD head = new HEAD(this);
+        head.write();
         this.tracked = new TreeMap<>();
     }
 
