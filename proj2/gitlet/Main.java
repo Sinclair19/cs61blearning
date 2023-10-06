@@ -52,6 +52,11 @@ public class Main {
             case "branch":
                 Utils.validateNumArgs("branch", args, 2);
                 Repository.branch(args[1]);
+                break;
+            case "rm-branch":
+                Utils.validateNumArgs("rm-branch", args, 2);
+                Repository.rmBranch(args[1]);
+                break;
         }
     }
 }

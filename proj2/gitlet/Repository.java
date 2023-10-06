@@ -137,6 +137,16 @@ public class Repository {
         Branch newBranch = new Branch(name);
         newBranch.updateHEAD(Method.getCurrentCommit());
         newBranch.write();
+    }
 
+    public static void rmBranch(String name) {
+        Branch cur = Method.getCurrentBranch();
+        File branchFile = join(BRANCHES_DIR, name);
+        Method.ExistOrExit(branchFile, "A branch with that name does not exist.");
+        if (cur.getName().equals(name)) {
+            Method.exit("Cannot remove the current branch.");
+        }
+
+        branchFile.delete();
     }
 }
