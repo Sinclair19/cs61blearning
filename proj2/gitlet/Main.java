@@ -57,6 +57,10 @@ public class Main {
                 Utils.validateNumArgs("rm-branch", args, 2);
                 Repository.rmBranch(args[1]);
                 break;
+            case "reset":
+                Utils.validateNumArgs("reset", args, 2);
+                Repository.reset(args[1]);
+                break;
         }
     }
 }

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 import static gitlet.Utils.*;
 
@@ -118,14 +119,17 @@ public class Repository {
         Commit new_commit = new Commit(message, parent_commit, now);
 
         // update HEAD and tracking list
-        current_branch.updateHEAD(new_commit);
-        current_branch.updateTracked(new_commit);
+        //current_branch.updateHEAD(new_commit);
+        //current_branch.updateTracked(new_commit);
 
-        Stage new_stage = new Stage();
+        //Stage new_stage = new Stage();
+
+        Method.updateHEAD(new_commit);
+        Method.clearStage();
 
         new_commit.write();
-        new_stage.write();
-        current_branch.write();
+        //new_stage.write();
+        //current_branch.write();
     }
 
     public static void branch(String name) {
@@ -148,5 +152,20 @@ public class Repository {
         }
 
         branchFile.delete();
+    }
+
+    public static void reset(String ID) {
+        Commit commit = Method.getCommit(ID);
+        if (commit == null) {
+            Method.exit("No commit with that id exists.");
+        }
+        Method.checkUntracked();
+        Map<String, String> tracked = commit.getTracked();
+        for (String filepath : tracked.keySet()) {
+            Checkout.checkoutFileID(commit, join(CWD, filepath));
+        }
+
+        Method.updateHEAD(commit);
+        Method.clearStage();
     }
 }

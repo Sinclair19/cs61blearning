@@ -129,4 +129,16 @@ public class Method {
             }
         }
     }
+
+    public static void updateHEAD(Commit commit) {
+        Branch cur = getCurrentBranch();
+        cur.updateHEAD(commit);
+        cur.updateTracked(commit);
+        cur.write();
+    }
+
+    public static void clearStage() {
+        Stage stage = new Stage();
+        stage.write();
+    }
 }
