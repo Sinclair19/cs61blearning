@@ -1523,3 +1523,63 @@ Runtime of some basic operations for each representation:
 - BFS is worse for "bushy" graphs, because our queue gets used a lot.
 
 We developed an algorithm that works well on graphs with no edge labels. Here's what we did: we developed an algorithm that finds us the shortest (where shortest means the fewest number of edges) paths from a given source vertex.  
+
+## 19.2 Dijkstra's
+
+### Dijkstra's Algorithm
+
+Dijkstra's algorithm takes in an input vertex $s$, and outputs the shortest path tree from $s$. How does it work?
+
+1. Create a priority queue.
+2. Add $s$ to the priority queue with priority $0$ Add all other vertices to the priority queue with priority $∞$.
+3. While the priority queue is not empty: pop a vertex out of the priority queue, and relax all of the edges going out from the vertex.
+
+Look at your current best distance to `w` from the source, call it 
+`curBestDistToW`.  
+Now, look at your `curBestDistToV+weight(v,w)` (let's call it `potentialDistToWUsingV`) .  
+Is `potentialDistToWUsingV` better, i.e., smaller than `curBestDistToW`?  
+In that case, set `curBestDistToW=potentialDistToWUsingV`, and update the `edgeTo[w]` to `v`.  
+
+Important note: we never relax edges that point to already visited vertices.  
+
+### Pseudocode
+
+```python
+def dijkstras(source):
+    PQ.add(source, 0)
+    For all other vertices, v, PQ.add(v, infinity)
+    while PQ is not empty:
+        p = PQ.removeSmallest()
+        relax(all edges from p)
+
+def relax(edge p,q):
+   if q is visited (i.e., q is not in PQ):
+       return
+
+   if distTo[p] + weight(edge) < distTo[q]:
+       distTo[q] = distTo[p] + w
+       edgeTo[q] = p
+       PQ.changePriority(q, distTo[q])
+```
+
+Dijkstra's algorithm is not guaranteed to be correct for negative edges. It might work... but it isn't guaranteed to work.  
+
+### A noteworthy invariant
+Observe that once a vertex is popped off the priority queue, it is never re-added. Its distance is never re-updated. So, in other words, once a vertex is popped from the priority queue, we know the true shortest distance to that vertex from the source.  
+
+## 19.3 A*
+
+### Introducing: A Star
+In Dijkstra's, we used `bestKnownDistToV` as the priority in our algorithm.  
+This time, we'll use `bestKnownDistToV+estimateFromVToGoal` as our heuristic.  
+
+Well, it's called an estimate because it's exactly that. We use A* to get the true shortest path from a source to a target, but the estimate is something we approximate.  
+
+### Bad Heuristics
+
+The takeaway here is that heuristics need to be good. There are two definitions required for goodness.
+
+1. Admissibility. `heuristic(v, target) ≤ trueDistance(v, target)`. (Think about the problem above. The true distance from the neighbor of C to C wasn't infinity, it was much, much smaller. But our heuristic said it was ∞, so we broke this rule.)
+2. Consistency. For each neighbor v of w:
+   - `heuristic(v, target) ≤ dist(v, w) + heuristic(w, target)`
+   - where dist(v, w) is the weight of the edge from v to w.
