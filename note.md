@@ -1592,21 +1592,20 @@ Important note: we never relax edges that point to already visited vertices.
 ### Pseudocode
 
 ```python
+def relax(edge p,q):
+   if q is visited (i.e., q is not in PQ):
+       return
+   if distTo[p] + weight(edge) < distTo[q]:
+       distTo[q] = distTo[p] + w
+       edgeTo[q] = p
+       PQ.changePriority(q, distTo[q])
+
 def dijkstras(source):
     PQ.add(source, 0)
     For all other vertices, v, PQ.add(v, infinity)
     while PQ is not empty:
         p = PQ.removeSmallest()
         relax(all edges from p)
-
-def relax(edge p,q):
-   if q is visited (i.e., q is not in PQ):
-       return
-
-   if distTo[p] + weight(edge) < distTo[q]:
-       distTo[q] = distTo[p] + w
-       edgeTo[q] = p
-       PQ.changePriority(q, distTo[q])
 ```
 
 Dijkstra's algorithm is not guaranteed to be correct for negative edges. It might work... but it isn't guaranteed to work.  
