@@ -1341,6 +1341,53 @@ public void swim(int k) {
 - BST's can have constant time getSmallest if pointer is stored to smallest element
 - Array-based heaps take around 1/3rd the memory it takes to represent a heap using approach 1A (direct pointers to children)
 
+# 16 QuadTrees
+
+## 16.1 Uniform Partitioning
+
+Initial Attempt: HashTable  
+Question: If our set of suns were stored in a HashTable, what is the runtime for finding the answer to our Nearest Neighbors question?  
+
+Solution: The bucket that each object resides in is effectively random, and so we would have to iterate over all $N$ items to check if each sun could possibly be the closest to the horse. $Θ(N)$.  
+
+The problem with hash tables is that the bucket number of an item is effectively random. Hash tables are, by definitely, unordered collections. One fix is to ensure that the bucket numbers depend only on position!  
+
+## 16.2 QuadTrees
+
+### X-Based Tree or Y-Based Tree
+One key advantage of Search Trees over Hash Tables is that trees explicitly track the order of items. For example, finding the minimum item in a BST is $Θ(logN)$ time, but $Θ(N)$ in a hash table. Let's try to leverage that to our advantage here to give us better performance for our motivating goals.  
+
+### QuadTree
+Also note that QuadTrees are a form of spatial partitioning in disguise. Similar to how uniform partitioning created a perfect grid before, QuadTrees hierarchically partition by having each node "own" 4 subspaces.  
+
+Effectively, spaces where there are many points are broken down into more finely divided regions, and in many cases this gives better performances.  
+
+### Range Search using a QuadTree
+Notice that with the 4-way division imposed by each node of the QuadTree, we still have the pruning effect that was so advantageous in our X-Based Tree and Y-Based Tree!  
+If we are looking for points inside a green rectangle as shown below, from any node we can decide whether the green rectangle lies within one or more quadrants, and only explore the branches/subtrees corresponding to those quadrants.  
+All other quadrants can be safely ignored and pruned away. Below, we see that the green rectangle lies only in the northeast quadrant, and so the NW, SE, and SW quadrants can all be pruned away and left unexplored. We can proceed recursively.
+
+
+## 16.3 K-D Trees
+
+One way we can extend the hierarchical partitioning idea to dimensions greater than two is by using a K-D Tree. It works by rotating through all the dimensions level by level.  
+
+So for the 2-D case, it partitions like an X-based Tree on the first level, then like a Y-based Tree on the next, then as an X-based Tree on third level, a Y-based Tree on the fourth, etc.  
+
+For the 3-D case, it rotates between each of the three dimensions every three levels, and so on and so forth for even higher dimensions.  
+Here you can see the advantages in a K-D Tree in how it is more easily generalized to higher dimensions.  
+But, no matter how high the dimensions get, a K-D tree will always be a binary tree, since each level is partitioned into "greater" and "less than".  
+
+### Nearest Neighbor using a K-D Tree
+
+To find the point that is the nearest neighbor to a query point, we follow this procedure in our K-D Tree:  
+
+- Start at the root and store that point as the "best so far". Compute its distance to the query point, and save that as the "score to beat". In the image above, we start at A whose distance to the flagged point is 4.5.
+- This node partitions the space around it into two subspaces. For each subspace, ask: "Can a better point be possibly found inside of this space?" This question can be answered by computing the shortest distance between the query point and the edge of our subspace (see dotted purple line below).
+- Continue recursively for each subspace identified as containing a possibly better point.
+- In the end, our "best so far" is the best point; the point closest to the query point.
+
+
 # 17 Tree Traversals and Graphs
 
 ## 17.1 Tree recap
