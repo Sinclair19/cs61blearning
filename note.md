@@ -1364,6 +1364,139 @@ Abstract Data Types can often contain two abstract ideas boiling down to one imp
 These two examples tell us that we can often think of an ADT by the use of another ADT.  
 And that Abstract Data Types have layers of abstraction, each defining a behavior that is more specific than the idea that came before it.  
 
+# 15 Tries
+
+## 15.1 Introduction to Tries
+
+### Tries
+- Balanced Search Tree:
+  - contains(x): $Θ(logN)$
+  - add(x): $Θ(logN)$
+- Resizing Separate Chaining Hash Table:
+  - contains(x): $Θ(1)$ (assuming even spread)
+  - add(x): $Θ(1)$ (assuming even spread and amortized)
+
+### Inventing the Trie
+Tries are a very useful data structure used in cases where keys can be broken into "characters" and share prefixes with other keys  
+
+Here are some key ideas that we will use:  
+- Every node stores only one letter
+- Nodes can be shared by multiple keys
+
+The Trie is a specific implementation for Sets and Maps that is specialized for strings.  
+We give each node a single character and each node can be a part of several keys inside of the trie.  
+Searching will only fail if we hit an unmarked node or we fall off the tree  
+Short for Retrieval tree, almost everyone pronounces it as "try" but Edward Fredkin suggested it be pronounced as "tree"  
+
+
+## 15.2 Implementation and Performance
+
+### Implementation
+
+```java
+public class TrieSet {
+   private static final int R = 128; // ASCII
+   private Node root;    // root of trie
+
+   private static class Node {
+      private char ch;  
+      private boolean isKey;   
+      private DataIndexedCharMap next;
+
+      private Node(char c, boolean blue, int R) {
+         ch = c; 
+         isKey = blue;
+         next = new DataIndexedCharMap<Node>(R);
+      }
+   }
+}
+```
+Each link corresponds to a character if and only if that character exists.  
+Therefore, we can remove the Node's character variable and instead base the value of the character from its position in the parent DataIndexedCharMap  
+
+### Performance
+Given a Trie with N keys the runtime for our Map/Set operations are as follows:
+- add: $Θ(1)$
+- contains: $Θ(1)$
+
+We only traverse the length of one key in the worst case ever, which is never related to the number of keys in the trie.  
+Therefore, let's look at the runtime through a measurement that can be measured; in terms of L, the length of the key:  
+- add: $Θ(L)$
+- contains: $O(L)$
+
+### Child Tracking
+The problem with this approach was that we would have initialized many null spots that don't contain any children.  
+
+- Alternate Idea #1: Hash-Table based Trie. This won't create an array of 128 spots, but instead initialize the default value and resize the array only when necessary with the load factor.
+- Alternate Idea #2: BST based Trie. Again this will only create children pointers when necessary, and we will store the children in the BST. Obviously, we still have the worry of the runtime for searching in this BST, but this is not a bad approach.
+
+- DataIndexedCharMap
+  - Space: 128 links per node
+  - Runtime: $Θ(1)$
+- BST
+  - Space: C links per node, where C is the number of children
+  - Runtime: $O(logR)$, where R is the size of the alphabet
+- Hash Table
+  - Space: C links per node, where C is the number of children
+  - Runtime: $O(R)$, where R is the size of the alphabet
+
+
+## 15.3 String Operations
+
+### Prefix Matching
+Define a method collect which returns all of the keys in a Trie. The pseudocode will be as follows:
+```java
+collect():
+    Create an empty list of results x
+    For character c in root.next.keys():
+        Call colHelp(c, x, root.next.get(c))
+    Return x
+
+colHelp(String s, List<String> x, Node n):
+    if n.isKey:
+        x.add(s)
+    For character c in n.next.keys():
+        Call colHelp(s + c, x, n.next.get(c))
+```
+
+Method keysWithPrefix which returns all keys that contain the prefix passed in as an argument  
+```java
+keysWithPrefix(String s):
+    Find the end of the prefix, alpha
+    Create an empty list x
+    For character in alpha.next.keys():
+        Call colHelp("sa" + c, x, alpha.next.get(c))
+    Return x
+```
+
+### Autocomplete
+One way to achieve this is using a Trie! We will build a map from strings to values.  
+Values will represent how important Google thinks that string is (Probably frequency)
+Store billions of strings efficiently since they share nodes, less wasteful duplicates
+When a user types a query, we can call the method keysWithPrefix(x) and return the 10 strings with the highest value  
+
+### Summary
+- Tries theoretically have better performances for searching and insertion than hash tables or balanced search trees  
+- There are more implementations for how to store the children of every node of the trie, specifically three. These three are all fine, but hash table is the most natural
+  - `DataIndexedCharMap` (Con: excessive use of space, Pro: speed efficient)
+  - `Bushy BST` (Con: slower child search, Pro: space efficient)
+  - `Hash Table` (Con: higher cost per link, Pro: space efficient)
+- Tries may not actually be faster in practice, but they support special string operations that other implementations don't
+  - `longestPrefixOf` and `keysWithPrefix` are easily implemented since the trie is stored character by character
+  - `keysWithPrefix` allows for algorithms like autocomplete to exist, which can be optimized through use of a priority queue.=
+
+|||||
+|---|---|---|---|
+|key|type|get(x)|add(x)|
+|Balanced BST|comparable|$Θ(logN)$|$Θ(logN)$|
+|RSC Hash Table|hashable|$Θ(1)​†$|$Θ(1)​∗†$|
+|Data Indexed Array|chars|$Θ(1)$|$Θ(1)$|
+|Tries (BST, HT, DICM)|Strings|$Θ(1)$|$Θ(1)$|
+
+$*$: Indicates "on average";   
+$†$: Indicates items are evenly spread.  
+
+
 # 16 QuadTrees
 
 ## 16.1 Uniform Partitioning
