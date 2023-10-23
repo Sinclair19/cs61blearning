@@ -1341,6 +1341,29 @@ public void swim(int k) {
 - BST's can have constant time getSmallest if pointer is stored to smallest element
 - Array-based heaps take around 1/3rd the memory it takes to represent a heap using approach 1A (direct pointers to children)
 
+
+# 14 A Brief Summary
+
+## 14.1 Data Structures Summary
+
+Search Data Structures
+
+|||||
+|---|---|---|---|
+|**Name**|**Store Operation(s)**|**Primary Retrieval Operation**|**Retrieve By**|
+|List|add(key), insert(key, index)|get(index)|index|
+|Map|put(key, value)|get(key)|key identity|
+|Set|add(key)|containsKey(key)|key identity|
+|PQ|add(key)|getSmallest()|key order (aka key size)|
+|Disjoint Sets|connect(int1, int2)|isConnected(int1, int2)|two integer values|
+
+### Abstraction  
+Abstraction often happens in layers.  
+Abstract Data Types can often contain two abstract ideas boiling down to one implementation.
+
+These two examples tell us that we can often think of an ADT by the use of another ADT.  
+And that Abstract Data Types have layers of abstraction, each defining a behavior that is more specific than the idea that came before it.  
+
 # 16 QuadTrees
 
 ## 16.1 Uniform Partitioning
@@ -1595,7 +1618,7 @@ Important note: we never relax edges that point to already visited vertices.
 def relax(edge p,q):
    if q is visited (i.e., q is not in PQ):
        return
-   if distTo[p] + weight(edge) < distTo[q]:
+   if (distTo[p] + weight(edge)) < distTo[q]:
        distTo[q] = distTo[p] + w
        edgeTo[q] = p
        PQ.changePriority(q, distTo[q])
