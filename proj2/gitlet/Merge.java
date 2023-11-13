@@ -4,13 +4,46 @@ import java.util.*;
 
 public class Merge {
 
+    public static void mergeCheck(String branchName) {
+        Method.checkUncommitted(); // check if there are uncommitted files
+        Method.checkUntracked(); // check if there are untracked files
+
+        Branch given = Method.getBranch(branchName);
+        if (given == null) {
+            Method.exit("A branch with that name does not exist.");
+        }
+
+        Branch current = Method.getCurrentBranch();
+        if (current.getName().equals(given.getName())) {
+            Method.exit("Cannot merge a branch with itself.");
+        }
+
+        preMerge(current, given);
+    }
+    public static void preMerge(Branch current, Branch given) {
+        Commit currentHEAD = current.returnCommit();
+        Commit givenHEAD = given.returnCommit();
+
+        Commit splitPoint = getSplitPoint(currentHEAD, givenHEAD);
+        if (splitPoint.getID().equals(currentHEAD.getID())) {
+            fastForward(given.getName());
+        }
+        if (splitPoint.getID().equals(givenHEAD.getID())) {
+            Method.exit("Given branch is an ancestor of the current branch.");
+        }
+
+    }
+
+    private static void fastForward (String branchName) {
+        Checkout.checkoutBranch(branchName);
+        Method.exit("Current branch fast-forwarded.");
+    }
+
     /**
      * Get the Split point by compare it's create date
      * Return the latest split point
      */
-    private static Commit getSplitPoint(Branch current, Branch given) {
-        Commit currentHEAD = current.returnHEAD().getCommit();
-        Commit givenHEAD = given.returnHEAD().getCommit();
+    private static Commit getSplitPoint(Commit currentHEAD, Commit givenHEAD) {
 
         Set<String> CurrentParents = getAllParents(currentHEAD);
 

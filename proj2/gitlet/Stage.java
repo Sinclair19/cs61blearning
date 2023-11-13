@@ -52,6 +52,7 @@ public class Stage implements Serializable {
         return false;
     }
 
+    // this can be used to check if staging area is empty or if there are uncommitted changes
     public boolean isEmpty() {
         return this.adding.isEmpty() && this.removing.isEmpty();
     }

@@ -73,6 +73,14 @@ public class Method {
         return null;
     }
 
+    public static Branch getBranch(String name) {
+        File dir = join(Repository.BRANCHES_DIR, name);
+        if (!dir.exists()) {
+            return null;
+        }
+        return Branch.read(dir);
+    }
+
     private static String checkCommitID(String ID) {
         int length = ID.length();
         if (length != 40) {
@@ -112,11 +120,23 @@ public class Method {
         }
         return all;
     }
-
+    /*
+     * This method has a problem that it just check if there are Untracked files
+     * between current staging area and current branch,
+     * it won't do check if these files will really modified by function who call this
+     * If a working file is untracked in the current branch and **would be overwritten by the checkout**
+     * As checking this is quite complex, I will see if it's really needed
+     */
     public static void checkUntracked() {
         if (! Status.getUntracked().isEmpty()) {
             Method.exit("There is an untracked file in the way; " +
                     "delete it, or add and commit it first.");
+        }
+    }
+
+    public static void checkUncommitted() {
+        if (getStaging().isEmpty()) {
+            Method.exit("You have uncommitted changes.");
         }
     }
 

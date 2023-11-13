@@ -61,6 +61,9 @@ public class Main {
                 Utils.validateNumArgs("reset", args, 2);
                 Repository.reset(args[1]);
                 break;
+            case "merge":
+                Utils.validateNumArgs("merge", args, 2);
+                Merge.mergeCheck(args[1]);
         }
     }
 }

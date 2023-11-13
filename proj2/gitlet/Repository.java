@@ -111,7 +111,7 @@ public class Repository {
         }
 
         Branch current_branch = Method.getCurrentBranch();
-        Commit parent_commit = current_branch.returnHEAD().getCommit();
+        Commit parent_commit = current_branch.returnCommit();
         Stage now = Stage.read(STAGED_DIR);
         if (now.isEmpty()) {
             Method.exit("No changes added to the commit.");

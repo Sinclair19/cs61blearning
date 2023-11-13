@@ -24,7 +24,7 @@ public class Branch implements Serializable {
     private Map<String, String> tracked;
 
     public Branch(String name) {
-        this.checkExist();
+        //this.checkExist();
         this.name = name;
         this.head = null;
         this.DIR = join(BRANCHES_DIR, name);
@@ -35,7 +35,7 @@ public class Branch implements Serializable {
     }
 
     public Branch(String name, HEAD HEAD) {
-        this.checkExist();
+        //this.checkExist();
         this.name = name;
         this.head = HEAD.getDIR();
         this.DIR = join(BRANCHES_DIR, name);
@@ -55,6 +55,10 @@ public class Branch implements Serializable {
 
     public HEAD returnHEAD() {
         return HEAD.read(this.head);
+    }
+
+    public Commit returnCommit() {
+        return returnHEAD().getCommit();
     }
 
     public File getDIR() {
