@@ -144,13 +144,18 @@ public class Commit implements Serializable {
                 getMessage() + "\n";
     }
 
-    public File getBlob(File file) { //get blob file with its file
+    /**
+     * get a blob with a file
+     */
+    public Blob getBlob(File file) { //get blob file with its file
         String filepath = file.getAbsolutePath();
         if (this.tracked.containsKey(filepath)) {
-            return join(Repository.OBJECTS_DIR, this.tracked.get(filepath));
+            File blobfile = join(Repository.OBJECTS_DIR, this.tracked.get(filepath));
+            return Blob.read(blobfile);
         } else {
-            return null;
+            Method.exit("File does not exist in that commit");
         }
+        return null;
     }
 
     public File getDIR() {

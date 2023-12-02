@@ -1,5 +1,6 @@
 package gitlet;
 
+import java.io.File;
 import java.util.*;
 
 public class Merge {
@@ -20,7 +21,7 @@ public class Merge {
 
         preMerge(current, given);
     }
-    public static void preMerge(Branch current, Branch given) {
+    private static void preMerge(Branch current, Branch given) {
         Commit currentHEAD = current.returnCommit();
         Commit givenHEAD = given.returnCommit();
 
@@ -31,7 +32,99 @@ public class Merge {
         if (splitPoint.getID().equals(givenHEAD.getID())) {
             Method.exit("Given branch is an ancestor of the current branch.");
         }
+        String message = "Merged " + given.getName() + " into " + current.getName() + '.';
+        Merge(currentHEAD, givenHEAD, splitPoint, message);
+    }
 
+    private static void Merge(Commit cHEAD, Commit gHEAD, Commit sp, String msg) {
+        Map<String, String> cTracked = cHEAD.getTracked();
+        Map<String, String> gTracked = gHEAD.getTracked();
+        Map<String, String> sTracked = sp.getTracked();
+        //get all files in CWD
+        List<String> files = Method.getfileASList(Repository.CWD);
+
+        List<String> progressed = new ArrayList<>();
+
+        for (String filename : files) {
+            String cHash = cTracked.get(filename);
+            String gHash = gTracked.get(filename);
+            String sHash = sTracked.get(filename);
+
+            File file = Utils.join(Repository.CWD, filename);
+
+            // 4. files that were not present at the split point and are present only in the current branch
+            if (!compare(cHash, null) && compare(gHash, null) && compare(sHash, null)) {
+                progressed.add(filename);
+                continue;
+            }
+            // 3. files that have been modified in both the current and given branch in the same way
+            if (compare(cHash, gHash)) {
+                progressed.add(filename);
+                continue;
+            }
+            // 2. files that have been modified in the current branch but not in the given branch since the split point
+            if (compare(gHash, sHash)) {
+                progressed.add(filename);
+                continue;
+            }
+            // 5.  files that were not present at the split point and are present only in the given branch
+            if (compare(cHash, null) && !compare(gHash, null) && compare(sHash, null)) {
+                Checkout.checkoutFileID(gHEAD.getID(), filename); // checkout a file with commit ID
+                Method.stageAdd(file);
+                progressed.add(filename);
+                continue;
+            }
+            // 1. files that have been modified in the given branch since the split point, but not modified in the current branch since the split point
+            if (compare(cHash, sHash) && !compare(gHash, sHash)) {
+                writeFile(file, gHash);
+                Method.stageAdd(file);
+                // As this may result in problem, should use another way
+                // files.remove(filename);
+                progressed.add(filename);
+                continue;
+            }
+            // 6. files present at the split point, unmodified in the current branch, and absent in the given branch
+            if (compare(cHash, null) && !compare(gHash, null) && !compare(sHash, null)) {
+                Method.stageRemove(file);
+                progressed.add(filename);
+                continue;
+            }
+            // 7.  files present at the split point, unmodified in the given branch, and absent in the current branch
+            if (!compare(cHash, null) && !compare(gHash, null) && compare(gHash, sHash)) {
+                progressed.add(filename);
+                continue;
+            }
+            if (sTracked.containsKey(filename) && !compare(cHash, gHash) ||
+                    !sTracked.containsKey(filename) && !compare(cHash, gHash)) {
+                    conflict(file, cHash, gHash);
+                    progressed.add(filename);
+            }
+        }
+    }
+
+    private static void conflict(File file, String cHash, String gHash) {
+        if (!compare(cHash, null) && !compare(gHash, null)) {
+            String cur = Method.getBlob(cHash).getContent();
+            String tar = Method.getBlob(gHash).getContent();
+            String str = "<<<<<<< HEAD\n" + cur + "=======\n" + tar + ">>>>>>>\n";
+            Utils.writeContents(file, str);
+            Method.stageAdd(file);
+        }
+    }
+
+    // return true if two string are equal and not null
+    private static boolean compare(String s1, String s2) {
+        if(s1 != null && s2 != null) {
+            return s1.equals(s2);
+        } else return s1 == null && s2 == null;
+    }
+
+    /**
+     * write a blob to a file
+     */
+    private static void writeFile (File file, String BlobHash) {
+        Blob blob = Method.getBlob(BlobHash);
+        Utils.writeContents(file, blob.getContent());
     }
 
     private static void fastForward (String branchName) {

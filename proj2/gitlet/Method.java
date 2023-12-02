@@ -35,7 +35,7 @@ public class Method {
     }
 
     public static String returnFileID(File file) {
-        return Utils.sha1(file.getAbsolutePath(), Utils.readContents(file)); // TODO: fix path
+        return Utils.sha1(file.getAbsolutePath(), Utils.readContentsAsString(file)); // TODO: fix path
     }
 
     public static HEAD readHEAD(File dir) {
@@ -98,6 +98,11 @@ public class Method {
     }
 
 
+
+
+    /**
+     * get a blob with its ID
+     */
     public static Blob getBlob(String ID) {
         return Blob.read(join(Repository.OBJECTS_DIR, ID));
     }
@@ -155,6 +160,18 @@ public class Method {
         cur.updateHEAD(commit);
         cur.updateTracked(commit);
         cur.write();
+    }
+
+    public static void stageAdd(File file) {
+        Stage stage = getStaging();
+        stage.add(file);
+        stage.write();
+    }
+
+    public static void stageRemove(File file) {
+        Stage stage = getStaging();
+        stage.remove(file);
+        stage.write();
     }
 
     public static void clearStage() {

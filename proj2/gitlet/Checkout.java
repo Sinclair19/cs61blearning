@@ -28,6 +28,7 @@ public class Checkout {
         checkoutFileID("current", filepath);
     }
 
+    // checkout a file with a commit ID, when ID == current, checkout current commit;
     public static void checkoutFileID(String ID, String filepath) {
         File file = join(Repository.CWD, filepath);
         Commit commit;
@@ -43,18 +44,13 @@ public class Checkout {
     }
 
     public static void checkoutFileID(Commit commit, File file) {
-        File Blobfile = commit.getBlob(file);
-        if (Blobfile == null) {
-            Method.exit("File does not exist in that commit");
-        }
-        Blob stored = Blob.read(Blobfile);
+        Blob stored = commit.getBlob(file);
         writeBlob(stored, file);
-
     }
 
     public static void writeBlob(Blob stored, File write) {
-        byte[] bytes = stored.getContent();
-        Utils.writeContents(write, (Object) bytes);
+        String string = stored.getContent();
+        Utils.writeContents(write, string);
     }
 
     public static void checkoutBranch(String branchName){
@@ -77,8 +73,9 @@ public class Checkout {
             writeBlob(write, file);
         }
 
-        Stage stage = new Stage();
-        stage.write(); //clear stage area
+        //Stage stage = new Stage();
+        //stage.write(); //clear stage area
+        Method.clearStage();
 
         HEAD newHEAD = newBranch.returnHEAD();
         Method.writeCurrentHEAD(newHEAD);

@@ -7,7 +7,7 @@ import static gitlet.Utils.*;
 
 public class Blob implements Serializable {
     private final String filepath;
-    private byte[] content;
+    private String content;
 
     private final String ID;
 
@@ -17,7 +17,7 @@ public class Blob implements Serializable {
 
     public Blob(File file) {
         this.filepath = file.getAbsolutePath();
-        this.content = Utils.readContents(file);
+        this.content = Utils.readContentsAsString(file);
         this.ID = Utils.sha1(filepath, content);
         this.DIR = join(OBJECT_DIR, ID);
     }
@@ -34,7 +34,7 @@ public class Blob implements Serializable {
         return this.filepath;
     }
 
-    public byte[] getContent() { return this.content; }
+    public String getContent() { return this.content; }
 
     public void write() {
         Utils.writeObject(DIR, this);
