@@ -2,6 +2,7 @@ package gitlet;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -101,7 +102,7 @@ public class Repository {
         now.write();
     }
 
-    public static void commit(String message) {
+    public static void commit(String message, List<Commit> parents) {
         if (message.trim().isEmpty()) {
             Method.exit("Please enter a commit message.");
         }
@@ -111,12 +112,16 @@ public class Repository {
         }
 
         Branch current_branch = Method.getCurrentBranch();
-        Commit parent_commit = current_branch.returnCommit();
+        if (parents == null) {
+            parents = new ArrayList<Commit>();
+            parents.add(current_branch.returnCommit());
+
+        }
         Stage now = Stage.read(STAGED_DIR);
         if (now.isEmpty()) {
             Method.exit("No changes added to the commit.");
         }
-        Commit new_commit = new Commit(message, parent_commit, now);
+        Commit new_commit = new Commit(message, parents, now);
 
         // update HEAD and tracking list
         //current_branch.updateHEAD(new_commit);

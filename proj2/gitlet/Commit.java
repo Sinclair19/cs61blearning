@@ -59,11 +59,13 @@ public class Commit implements Serializable {
         this.DIR = join(COMMITS_DIR, this.ID);
     }
 
-    public Commit(String message, Commit p, Stage Staging) {
+    public Commit(String message, List<Commit> p, Stage Staging) {
         checkMessage(message);
         this.message = message;
         createMap();
-        this.parent.add(p.ID);
+        for (Commit c: p) {
+            this.parent.add(c.ID);
+        }
         setTime();
         configMap(Staging);
         updateID();

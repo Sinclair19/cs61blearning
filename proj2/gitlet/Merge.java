@@ -43,7 +43,6 @@ public class Merge {
         //get all files in CWD
         List<String> files = Method.getfileASList(Repository.CWD);
 
-        List<String> progressed = new ArrayList<>();
 
         for (String filename : files) {
             String cHash = cTracked.get(filename);
@@ -54,52 +53,44 @@ public class Merge {
 
             // 4. files that were not present at the split point and are present only in the current branch
             if (!compare(cHash, null) && compare(gHash, null) && compare(sHash, null)) {
-                progressed.add(filename);
                 continue;
             }
             // 3. files that have been modified in both the current and given branch in the same way
             if (compare(cHash, gHash)) {
-                progressed.add(filename);
                 continue;
             }
             // 2. files that have been modified in the current branch but not in the given branch since the split point
             if (compare(gHash, sHash)) {
-                progressed.add(filename);
                 continue;
             }
             // 5.  files that were not present at the split point and are present only in the given branch
             if (compare(cHash, null) && !compare(gHash, null) && compare(sHash, null)) {
                 Checkout.checkoutFileID(gHEAD.getID(), filename); // checkout a file with commit ID
                 Method.stageAdd(file);
-                progressed.add(filename);
                 continue;
             }
             // 1. files that have been modified in the given branch since the split point, but not modified in the current branch since the split point
             if (compare(cHash, sHash) && !compare(gHash, sHash)) {
                 writeFile(file, gHash);
                 Method.stageAdd(file);
-                // As this may result in problem, should use another way
-                // files.remove(filename);
-                progressed.add(filename);
                 continue;
             }
             // 6. files present at the split point, unmodified in the current branch, and absent in the given branch
             if (compare(cHash, null) && !compare(gHash, null) && !compare(sHash, null)) {
                 Method.stageRemove(file);
-                progressed.add(filename);
                 continue;
             }
             // 7.  files present at the split point, unmodified in the given branch, and absent in the current branch
             if (!compare(cHash, null) && !compare(gHash, null) && compare(gHash, sHash)) {
-                progressed.add(filename);
                 continue;
             }
             if (sTracked.containsKey(filename) && !compare(cHash, gHash) ||
                     !sTracked.containsKey(filename) && !compare(cHash, gHash)) {
-                    conflict(file, cHash, gHash);
-                    progressed.add(filename);
+                conflict(file, cHash, gHash);
             }
         }
+        List<Commit> parents = new ArrayList<>(Arrays.asList(cHEAD, gHEAD));
+        Repository.commit(msg, parents);
     }
 
     private static void conflict(File file, String cHash, String gHash) {
@@ -108,6 +99,7 @@ public class Merge {
             String tar = Method.getBlob(gHash).getContent();
             String str = "<<<<<<< HEAD\n" + cur + "=======\n" + tar + ">>>>>>>\n";
             Utils.writeContents(file, str);
+            System.out.println("Encountered a merge conflict.");
             Method.stageAdd(file);
         }
     }
